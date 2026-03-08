@@ -53,7 +53,6 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ctx.rb.MoveRotation(Quaternion.Euler(0f, ctx.yaw, 0f));
         CheckCollisions();
         ctx.rb.linearVelocity = ctx.frameVelocity;
         machine.FixedTick(Time.fixedDeltaTime);
@@ -143,6 +142,7 @@ public class PlayerStateDriver3D : MonoBehaviour
         if (cameraTarget != null)
         {
             cameraTarget.localRotation = Quaternion.Euler(ctx.pitch, 0f, 0f);
+            ctx.rb.MoveRotation(Quaternion.Euler(0f, ctx.yaw, 0f));
         }
     }
 
