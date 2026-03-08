@@ -638,7 +638,7 @@ MonoBehaviour:
   ceilingCheckDistance: 0.05
   excludeFromCollisions:
     serializedVersion: 2
-    m_Bits: 24
+    m_Bits: 8
   drawGizmos: 1
 --- !u!54 &170550233
 Rigidbody:
