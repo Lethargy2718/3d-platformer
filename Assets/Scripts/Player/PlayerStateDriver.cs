@@ -58,6 +58,11 @@ public class PlayerStateDriver3D : MonoBehaviour
         machine.FixedTick(Time.fixedDeltaTime);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        machine.HandleCollision(collision);
+    }
+
     private void LateUpdate()
     {
         if (stateText == null) return;
@@ -108,12 +113,10 @@ public class PlayerStateDriver3D : MonoBehaviour
         controls.Player.Sprint.performed += _ =>
         {
             ctx.sprintHeld = true;
-            ctx.InvokeSprintStarted();
         };
         controls.Player.Sprint.canceled += _ =>
         {
             ctx.sprintHeld = false;
-            ctx.InvokeSprintEnded();
         };
     }
 
@@ -152,8 +155,8 @@ public class PlayerStateDriver3D : MonoBehaviour
         float radius = ctx.col.radius;
         float halfH = ctx.col.height * 0.5f - radius;
 
-       bool  groundHit = Physics.SphereCast(center, radius, Vector3.down, out _, halfH + groundCheckDistance, ~excludeFromCollisions, QueryTriggerInteraction.Ignore);
-       bool ceilingHit = Physics.SphereCast(center, radius, Vector3.up, out _, halfH + ceilingCheckDistance, ~excludeFromCollisions, QueryTriggerInteraction.Ignore);
+        bool groundHit = Physics.SphereCast(center, radius, Vector3.down, out _, halfH + groundCheckDistance, ~excludeFromCollisions, QueryTriggerInteraction.Ignore);
+        bool ceilingHit = Physics.SphereCast(center, radius, Vector3.up, out _, halfH + ceilingCheckDistance, ~excludeFromCollisions, QueryTriggerInteraction.Ignore);
 
         if (ceilingHit)
             ctx.frameVelocity.y = Mathf.Min(0f, ctx.frameVelocity.y);

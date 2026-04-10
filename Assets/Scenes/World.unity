@@ -602,6 +602,7 @@ MonoBehaviour:
     grounded: 1
     lastGroundedTime: 111.019
     ceilingHit: 0
+    forwardHit: 0
     hasBufferedJump: 0
     endedJumpEarly: 0
     coyoteUsable: 1
@@ -614,14 +615,19 @@ MonoBehaviour:
     yaw: 2552.85
     pitch: -80
     currentBobStrength: 0
+    targetBobStrength: 0
     maxWalkSpeed: 10
     sprintMultiplier: 2.3
-    acceleration: 80
+    acceleration: 160
     groundDecel: 20
     airDecel: 30
-    bobFrequency: 1.5
-    bobAmplitude: 0.5
+    bobFrequency: 1.3
+    bobAmplitude: 0.3
     bobSmoothing: 8
+    bobCameraSmoothing: 12
+    bobXMultiplier: 0.5
+    bobStopThreshold: 0.01
+    bobMoveStrength: 1
     jumpHeight: 5
     coyoteTime: 0.15
     jumpBuffer: 0.15
@@ -670,7 +676,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &328367004
 GameObject:
   m_ObjectHideFlags: 0

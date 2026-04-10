@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerDash : State
 {
@@ -49,6 +50,33 @@ public class PlayerDash : State
         timer += deltaTime;
         if (timer >= ctx.dashDuration)
             endDash = true;
+    }
+
+    protected override void OnFixedUpdate(float fixedDeltaTime)
+    {
+        if (ctx.forwardHit)
+        {
+            endDash = true;
+        }
+    }
+
+    protected override void OnCollision(Collision collision)
+    {
+        bool hitWall = false;
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (contact.normal.y < 0.3f) // TODO: move angle to ctx
+            {
+                hitWall = true;
+                break;
+            }
+        }
+
+        if (hitWall)
+        {
+            endDash = true;
+            ctx.frameVelocity = Vector3.zero;
+        }
     }
 
     protected override void OnExit()

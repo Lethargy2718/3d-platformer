@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class StateMachine {
     public readonly State Root;
@@ -26,6 +27,11 @@ public class StateMachine {
     {
         if (!started) return;
         Root.FixedUpdate(fixedDeltaTime);
+    }
+
+    public void HandleCollision(Collision collision)
+    {
+        Root.HandleCollision(collision);
     }
 
     internal void InternalTick(float deltaTime) => Root.Update(deltaTime);

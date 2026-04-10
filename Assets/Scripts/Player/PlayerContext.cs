@@ -29,6 +29,7 @@ public class PlayerContext
     [HideInInspector] public bool grounded;
     [HideInInspector] public float lastGroundedTime = float.MinValue;
     [HideInInspector] public bool ceilingHit;
+    [HideInInspector] public bool forwardHit;
 
     // Jump
     [HideInInspector] public bool hasBufferedJump;
@@ -113,6 +114,4 @@ public class PlayerContext
     public void InvokeDashed() => Dashed?.Invoke();
     public void InvokeDashEnded() => DashEnded?.Invoke();
     public void InvokeGroundedChanged(bool g, float v) => GroundedChanged?.Invoke(g, v);
-    public void InvokeSprintStarted() => SprintStarted?.Invoke();
-    public void InvokeSprintEnded() => SprintEnded?.Invoke();
 }

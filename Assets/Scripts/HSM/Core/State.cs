@@ -16,7 +16,7 @@ public abstract class State {
         
     public void Add(IActivity a){ if (a != null) activities.Add(a); }
         
-    protected virtual State GetInitialState() => null; // Initial child to enter when this state starts (null = this is the leaf
+    protected virtual State GetInitialState() => null; // Initial child to enter when this state starts (null = this is the leaf)
     protected virtual State GetTransition() => null; // Target state to switch to this frame (null = stay in current state)
         
     // Lifecycle hooks
@@ -24,6 +24,7 @@ public abstract class State {
     protected virtual void OnExit() { }
     protected virtual void OnUpdate(float deltaTime) { }
     protected virtual void OnFixedUpdate(float fixedDeltaTime) { }
+    protected virtual void OnCollision(Collision collision) { }
 
     internal void Enter() {
         if (Parent != null) Parent.ActiveChild = this;
@@ -51,6 +52,11 @@ public abstract class State {
     {
         if (ActiveChild != null) ActiveChild.FixedUpdate(fixedDeltaTime);
         OnFixedUpdate(fixedDeltaTime);
+    }
+    internal void HandleCollision(Collision collision)
+    {
+        if (ActiveChild != null) ActiveChild.HandleCollision(collision);
+        OnCollision(collision);
     }
 
     // Returns the deepest currently-active descendant state (the leaf of the active path).
