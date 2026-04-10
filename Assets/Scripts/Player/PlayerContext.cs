@@ -47,12 +47,25 @@ public class PlayerContext
     [HideInInspector] public float yaw;
     [HideInInspector] public float pitch;
 
+    // Bob
+    [HideInInspector] public float currentBobStrength = 0f;
+    [HideInInspector] public float targetBobStrength = 0f;
+
     [Header("Horizontal Movement")]
     public float maxWalkSpeed = 6f;
     public float sprintMultiplier = 1.6f;
     public float acceleration = 80f;
     public float groundDecel = 20f;
     public float airDecel = 4f;
+
+    [Header("Head Bob")]
+    public float bobFrequency = 10f;
+    public float bobAmplitude = 0.05f;
+    public float bobSmoothing = 8f;
+    public float bobCameraSmoothing = 12f;
+    public float bobXMultiplier = 0.5f;
+    public float bobStopThreshold = 0.01f;
+    public float bobMoveStrength = 1.0f;
 
     [Header("Jump")]
     public float jumpHeight = 2f;

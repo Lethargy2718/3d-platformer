@@ -613,11 +613,15 @@ MonoBehaviour:
     hasAirDashed: 0
     yaw: 2552.85
     pitch: -80
+    currentBobStrength: 0
     maxWalkSpeed: 10
     sprintMultiplier: 2.3
     acceleration: 80
     groundDecel: 20
     airDecel: 30
+    bobFrequency: 1.5
+    bobAmplitude: 0.5
+    bobSmoothing: 8
     jumpHeight: 5
     coyoteTime: 0.15
     jumpBuffer: 0.15
@@ -818,6 +822,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -943,6 +948,20 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4259e7c3698e5c54db97f8777162f4db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeadBob
+  player: {fileID: 170550232}
+  cam: {fileID: 330585546}
 --- !u!1 &400292813
 GameObject:
   m_ObjectHideFlags: 0
