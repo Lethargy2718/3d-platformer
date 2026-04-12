@@ -10,6 +10,7 @@ public class PlayerStateDriver3D : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private TextMeshProUGUI stateText;
+    [SerializeField] private ThirdPersonCameraRig thirdPersonCamera;
 
     [Header("Collision")]
     [SerializeField] private float groundCheckDistance = 0.05f;
@@ -44,7 +45,6 @@ public class PlayerStateDriver3D : MonoBehaviour
     {
         ctx.time += Time.deltaTime;
         CalculateMoveDirection();
-        ApplyLook();
         machine.Tick(Time.deltaTime);
         ctx.jumpPressed = false;
         ctx.dashPressed = false;
@@ -53,6 +53,7 @@ public class PlayerStateDriver3D : MonoBehaviour
     private void FixedUpdate()
     {
         CheckCollisions();
+        ApplyLook();
         ctx.rb.linearVelocity = ctx.frameVelocity;
         machine.FixedTick(Time.fixedDeltaTime);
     }
@@ -79,10 +80,6 @@ public class PlayerStateDriver3D : MonoBehaviour
         // Move
         controls.Player.Move.performed += ctx2 => ctx.moveInput = ctx2.ReadValue<Vector2>();
         controls.Player.Move.canceled += _ => ctx.moveInput = Vector2.zero;
-
-        // Look
-        controls.Player.Look.performed += ctx2 => ctx.lookInput = ctx2.ReadValue<Vector2>();
-        controls.Player.Look.canceled += _ => ctx.lookInput = Vector2.zero;
 
         // Jump
         controls.Player.Jump.performed += _ =>
@@ -137,15 +134,10 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private void ApplyLook()
     {
-        ctx.yaw += ctx.lookInput.x * ctx.mouseSensitivity;
-        ctx.pitch -= ctx.lookInput.y * ctx.mouseSensitivity;
-        ctx.pitch = Mathf.Clamp(ctx.pitch, ctx.pitchMin, ctx.pitchMax);
+        ctx.yaw = thirdPersonCamera.Yaw;
 
         if (cameraTarget != null)
-        {
-            cameraTarget.localRotation = Quaternion.Euler(ctx.pitch, 0f, 0f);
             ctx.rb.MoveRotation(Quaternion.Euler(0f, ctx.yaw, 0f));
-        }
     }
 
     private void CheckCollisions()

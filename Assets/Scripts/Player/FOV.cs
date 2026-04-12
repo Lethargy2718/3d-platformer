@@ -1,15 +1,16 @@
 using UnityEngine;
+using Cinemachine;
 
 public class FOV : MonoBehaviour
 {
     [SerializeField] private PlayerStateDriver3D player;
-    public Camera cam;
+    [SerializeField] private CinemachineVirtualCamera vcam;
     private float baseFOV;
     private PlayerContext ctx;
 
     void Start()
     {
-        baseFOV = cam.fieldOfView;
+        baseFOV = vcam.m_Lens.FieldOfView;
         ctx = player.ctx;
     }
 
@@ -21,6 +22,8 @@ public class FOV : MonoBehaviour
         float t = Mathf.Pow(Mathf.InverseLerp(0f, ctx.fovReferenceSpeed, speed), 1.25f); // TODO: add a curve
         float targetFOV = baseFOV + t * ctx.maxFovAmount;
 
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFOV, smoothT);
+        LensSettings lens = vcam.m_Lens;
+        lens.FieldOfView = Mathf.Lerp(lens.FieldOfView, targetFOV, smoothT);
+        vcam.m_Lens = lens;
     }
 }

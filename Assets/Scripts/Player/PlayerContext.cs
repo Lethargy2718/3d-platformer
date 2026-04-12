@@ -46,7 +46,6 @@ public class PlayerContext
 
     // Look
     [HideInInspector] public float yaw;
-    [HideInInspector] public float pitch;
 
     [Header("Horizontal Movement")]
     public float maxWalkSpeed = 6f;
@@ -84,11 +83,6 @@ public class PlayerContext
     public float dashCooldown = 1f;
     public float dashBuffer = 0.15f;
     public float maxWallNormalY = 0.9f;
-
-    [Header("Look")]
-    public float mouseSensitivity = 0.15f;
-    public float pitchMin = -80f;
-    public float pitchMax = 80f;
 
     public bool CanUseBufferedJump => hasBufferedJump && time < timeJumpWasPressed + jumpBuffer;
 
