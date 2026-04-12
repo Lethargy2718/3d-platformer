@@ -588,19 +588,19 @@ MonoBehaviour:
   ctx:
     rb: {fileID: 170550233}
     col: {fileID: 170550227}
-    transform: {fileID: 0}
-    time: 112.5358
+    transform: {fileID: 170550230}
+    time: 341.9584
     moveInput: {x: 0, y: 0}
     lookInput: {x: 0, y: 0}
     jumpPressed: 0
     jumpHeld: 0
     dashPressed: 0
     sprintHeld: 0
-    frameVelocity: {x: 0, y: -1.5, z: 0}
+    frameVelocity: {x: -0.000058039015, y: -1.5, z: -0.000033422326}
     moveDirection: {x: 0, y: 0, z: 0}
-    currentDirection: {x: 0, y: 0}
+    currentDirection: {x: -1, y: 1}
     grounded: 1
-    lastGroundedTime: 111.019
+    lastGroundedTime: 340.06934
     ceilingHit: 0
     forwardHit: 0
     hasBufferedJump: 0
@@ -608,26 +608,25 @@ MonoBehaviour:
     coyoteUsable: 1
     timeJumpWasPressed: -3.4028235e+38
     hasBufferedDash: 0
-    timeDashWasPressed: 110.35076
-    timeDashEnded: 110.56315
-    dashDirection: {x: -0.9114012, y: 0, z: -0.41151875}
+    timeDashWasPressed: 339.8075
+    timeDashEnded: 340.06934
+    dashDirection: {x: -0.86651003, y: -0.01308946, z: -0.4989879}
     hasAirDashed: 0
-    yaw: 2552.85
-    pitch: -80
-    currentBobStrength: 0
-    targetBobStrength: 0
+    yaw: 7561.029
+    pitch: -17.250004
     maxWalkSpeed: 10
-    sprintMultiplier: 2.3
-    acceleration: 160
-    groundDecel: 20
-    airDecel: 30
+    sprintMultiplier: 2
+    groundAcceleration: 100
+    groundFriction: 6
+    airAcceleration: 50
+    airFriction: 3
     bobFrequency: 1.3
     bobAmplitude: 0.3
-    bobSmoothing: 8
     bobCameraSmoothing: 12
     bobXMultiplier: 0.5
-    bobStopThreshold: 0.01
-    bobMoveStrength: 1
+    fovSmoothing: 8
+    maxFovAmount: 30
+    fovReferenceSpeed: 40
     jumpHeight: 5
     coyoteTime: 0.15
     jumpBuffer: 0.15
@@ -636,9 +635,10 @@ MonoBehaviour:
     maxFallSpeed: 30
     groundingForce: -1.5
     dashSpeed: 40
-    dashDuration: 0.5
+    dashDuration: 0.25
     dashCooldown: 0.3
     dashBuffer: 0.15
+    maxWallNormalY: 0.9
     mouseSensitivity: 0.15
     pitchMin: -90
     pitchMax: 90
@@ -649,7 +649,6 @@ MonoBehaviour:
   excludeFromCollisions:
     serializedVersion: 2
     m_Bits: 8
-  drawGizmos: 1
 --- !u!54 &170550233
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -745,8 +744,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292149503
-  m_fontColor: {r: 1, g: 0, b: 0.83389616, a: 1}
+    rgba: 4278255395
+  m_fontColor: {r: 0.1383388, g: 1, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -829,6 +828,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -968,6 +968,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeadBob
   player: {fileID: 170550232}
   cam: {fileID: 330585546}
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1552f61a6ec745f4f891b190750ba460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FOV
+  player: {fileID: 170550232}
+  cam: {fileID: 330585545}
 --- !u!1 &400292813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,7 +1234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c6bed1081185c4f91b725d1803c96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
-  cycleLength: 60
+  cycleLength: 180
 --- !u!1 &495152031
 GameObject:
   m_ObjectHideFlags: 0

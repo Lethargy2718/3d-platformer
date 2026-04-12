@@ -15,7 +15,6 @@ public class PlayerStateDriver3D : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 0.05f;
     [SerializeField] private float ceilingCheckDistance = 0.05f;
     [SerializeField] private LayerMask excludeFromCollisions;
-    [SerializeField] public bool drawGizmos = true;
 
     private PlayerControls controls;
     private StateMachine machine;

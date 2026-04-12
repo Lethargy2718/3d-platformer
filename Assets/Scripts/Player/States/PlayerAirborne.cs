@@ -19,7 +19,19 @@ public class PlayerAirborne : State
     {
         HandleGravity(fixedDeltaTime);
 
-        ctx.frameVelocity = MovementUtils.ApplyHorizontal(ctx.frameVelocity, ctx.moveDirection, ctx.CurrentMaxSpeed, ctx.acceleration, ctx.airDecel, fixedDeltaTime);
+        ctx.frameVelocity = MovementUtils.ApplyHorizontal(ctx.frameVelocity, ctx.moveDirection, ctx.CurrentMaxSpeed, ctx.airAcceleration, ctx.airFriction, fixedDeltaTime);
+    }
+
+    protected override void OnCollision(Collision collision)
+    {
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (contact.normal.y < ctx.maxWallNormalY)
+            {
+                ctx.frameVelocity.x = 0;
+                ctx.frameVelocity.z = 0;
+            }
+        }
     }
 
     private void HandleGravity(float dt)

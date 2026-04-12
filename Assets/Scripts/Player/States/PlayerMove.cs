@@ -19,18 +19,8 @@ public class PlayerMove : State
         return null;
     }
 
-    protected override void OnEnter()
-    {
-        ctx.targetBobStrength = ctx.bobMoveStrength;
-    }
-
     protected override void OnFixedUpdate(float fixedDeltaTime)
     {
-        ctx.frameVelocity = MovementUtils.ApplyHorizontal(ctx.frameVelocity, ctx.moveDirection, ctx.CurrentMaxSpeed, ctx.acceleration, ctx.groundDecel, fixedDeltaTime);
-    }
-
-    protected override void OnExit()
-    {
-        ctx.targetBobStrength = 0.0f;
+        ctx.frameVelocity = MovementUtils.ApplyHorizontal(ctx.frameVelocity, ctx.moveDirection, ctx.CurrentMaxSpeed, ctx.groundAcceleration, ctx.groundFriction, fixedDeltaTime);
     }
 }

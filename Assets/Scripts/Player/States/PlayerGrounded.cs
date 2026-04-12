@@ -13,7 +13,7 @@ public class PlayerGrounded : State
         PlayerMove = new PlayerMove(m, this, ctx);
     }
 
-    protected override State GetInitialState() => ctx.moveInput.sqrMagnitude > 0.01f ? PlayerMove : PlayerIdle;
+    protected override State GetInitialState() => ctx.frameVelocity.sqrMagnitude > 0.01f ? PlayerMove : PlayerIdle;
 
     protected override State GetTransition()
     {

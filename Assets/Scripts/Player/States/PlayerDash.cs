@@ -65,7 +65,7 @@ public class PlayerDash : State
         bool hitWall = false;
         foreach (ContactPoint contact in collision.contacts)
         {
-            if (contact.normal.y < 0.3f) // TODO: move angle to ctx
+            if (contact.normal.y < ctx.maxWallNormalY)
             {
                 hitWall = true;
                 break;

@@ -1,3 +1,4 @@
+using System.Xml;
 using UnityEngine;
 
 public class HeadBob : MonoBehaviour
@@ -9,7 +10,7 @@ public class HeadBob : MonoBehaviour
     private float bobTime;
     private PlayerContext ctx;
 
-    void Start()
+    private void Start()
     {
         // assuming it's only set once at the start. if it ever changes somewhere else, i'll need a centralized manager
         baseLocalPos = cam.localPosition;
@@ -18,43 +19,27 @@ public class HeadBob : MonoBehaviour
         ctx = player.ctx;
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
-        ctx.currentBobStrength = Mathf.Lerp(
-            ctx.currentBobStrength,
-            ctx.targetBobStrength,
-            Time.deltaTime * ctx.bobSmoothing
-        );
+        float cameraT = 1f - Mathf.Exp(-ctx.bobCameraSmoothing * Time.deltaTime);
 
-        // Return to original position
-        if (ctx.currentBobStrength < ctx.bobStopThreshold)
+        float speed = new Vector2(ctx.frameVelocity.x, ctx.frameVelocity.z).magnitude;
+        bool isDashing = ctx.time < ctx.timeDashWasPressed + ctx.dashDuration;
+        float strength = ctx.grounded && !isDashing ? Mathf.InverseLerp(0f, ctx.CurrentMaxSpeed, speed) : 0f;
+
+        if (strength < 0.01f)
         {
-            cam.localPosition = Vector3.Lerp(
-                cam.localPosition,
-                baseLocalPos,
-                Time.deltaTime * ctx.bobSmoothing
-            );
+            cam.localPosition = Vector3.Lerp(cam.localPosition, baseLocalPos, cameraT);
             return;
         }
 
-        Vector3 horizontalVel = new Vector3(
-            ctx.frameVelocity.x, 0f, ctx.frameVelocity.z
-        );
-
-        float speed = horizontalVel.magnitude;
-
         bobTime += Time.deltaTime * ctx.bobFrequency * speed;
-
         Vector3 bobOffset = new Vector3(
             Mathf.Cos(bobTime * ctx.bobXMultiplier),
             Mathf.Sin(bobTime),
             0f
-        ) * ctx.bobAmplitude * ctx.currentBobStrength;
+        ) * ctx.bobAmplitude * strength;
 
-        cam.localPosition = Vector3.Lerp(
-            cam.localPosition,
-            baseLocalPos + bobOffset,
-            Time.deltaTime * ctx.bobCameraSmoothing
-        );
+        cam.localPosition = Vector3.Lerp(cam.localPosition, baseLocalPos + bobOffset, cameraT);
     }
 }

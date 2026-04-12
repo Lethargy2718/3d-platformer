@@ -19,9 +19,8 @@ public class PlayerIdle : State
         return null;
     }
 
-    protected override void OnEnter()
+    protected override void OnFixedUpdate(float dt)
     {
-        ctx.frameVelocity.x = 0f;
-        ctx.frameVelocity.z = 0f;
+        ctx.frameVelocity = MovementUtils.ApplyHorizontal(ctx.frameVelocity, Vector3.zero, ctx.CurrentMaxSpeed, ctx.groundAcceleration, ctx.groundFriction, dt);
     }
 }

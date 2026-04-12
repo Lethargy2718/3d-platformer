@@ -48,25 +48,24 @@ public class PlayerContext
     [HideInInspector] public float yaw;
     [HideInInspector] public float pitch;
 
-    // Bob
-    [HideInInspector] public float currentBobStrength = 0f;
-    [HideInInspector] public float targetBobStrength = 0f;
-
     [Header("Horizontal Movement")]
     public float maxWalkSpeed = 6f;
     public float sprintMultiplier = 1.6f;
-    public float acceleration = 80f;
-    public float groundDecel = 20f;
-    public float airDecel = 4f;
+    public float groundAcceleration = 80f;
+    public float groundFriction = 10f;
+    public float airAcceleration = 10f;
+    public float airFriction = 10f;
 
     [Header("Head Bob")]
     public float bobFrequency = 10f;
     public float bobAmplitude = 0.05f;
-    public float bobSmoothing = 8f;
     public float bobCameraSmoothing = 12f;
     public float bobXMultiplier = 0.5f;
-    public float bobStopThreshold = 0.01f;
-    public float bobMoveStrength = 1.0f;
+
+    [Header("FOV")]
+    public float fovSmoothing = 8f;
+    public float maxFovAmount = 15f;
+    public float fovReferenceSpeed = 40f;
 
     [Header("Jump")]
     public float jumpHeight = 2f;
@@ -84,6 +83,7 @@ public class PlayerContext
     public float dashDuration = 0.18f;
     public float dashCooldown = 1f;
     public float dashBuffer = 0.15f;
+    public float maxWallNormalY = 0.9f;
 
     [Header("Look")]
     public float mouseSensitivity = 0.15f;
@@ -107,8 +107,6 @@ public class PlayerContext
     public event Action Jumped;
     public event Action Dashed;
     public event Action DashEnded;
-    public event Action SprintStarted;
-    public event Action SprintEnded;
 
     public void InvokeJumped() => Jumped?.Invoke();
     public void InvokeDashed() => Dashed?.Invoke();
