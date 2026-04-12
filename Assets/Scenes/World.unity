@@ -686,7 +686,7 @@ MonoBehaviour:
     maxWallNormalY: 0.9
   cameraTarget: {fileID: 330585546}
   stateText: {fileID: 328367006}
-  thirdPersonCamera: {fileID: 1646379099}
+  cameraRig: {fileID: 1646379099}
   groundCheckDistance: 0.05
   ceilingCheckDistance: 0.05
   excludeFromCollisions:

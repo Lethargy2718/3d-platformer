@@ -10,7 +10,7 @@ public class PlayerStateDriver3D : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private TextMeshProUGUI stateText;
-    [SerializeField] private ThirdPersonCameraRig thirdPersonCamera;
+    [SerializeField] private CameraRig cameraRig;
 
     [Header("Collision")]
     [SerializeField] private float groundCheckDistance = 0.05f;
@@ -134,7 +134,8 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private void ApplyLook()
     {
-        ctx.yaw = thirdPersonCamera.Yaw;
+        // TODO: either remove ctx.yaw or change it with an event
+        ctx.yaw = cameraRig.Yaw;
 
         if (cameraTarget != null)
             ctx.rb.MoveRotation(Quaternion.Euler(0f, ctx.yaw, 0f));

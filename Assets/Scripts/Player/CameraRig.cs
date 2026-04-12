@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ThirdPersonCameraRig : MonoBehaviour
+public class CameraRig : MonoBehaviour
 {
     [SerializeField] private Transform target;
     [SerializeField] private float sensitivity = 0.2f;
