@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34081794aba01c46987b11a62f79828, type: 3}
+  m_Name: Potion
+  m_EditorClassIdentifier: Assembly-CSharp::HealingItem
+  itemName: Healing Potion
+  itemIcon: {fileID: 21300000, guid: 2d7de0afcdaddaf4a97f3fb3ad528918, type: 3}
+  itemDescription: Heals 10 HP
+  prefab: {fileID: 6919348828491188698, guid: b979d64d608e21a419e63400e1f2e60d, type: 3}
+  health: 10

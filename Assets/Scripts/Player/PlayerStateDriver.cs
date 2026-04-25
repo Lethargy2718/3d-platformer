@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -7,9 +9,18 @@ public class PlayerStateDriver3D : MonoBehaviour
 {
     public PlayerContext ctx = new PlayerContext();
 
+    // TODO: remove
+    public Item placeholderItem = null;
+
+    public Inventory inventory = new(8); // TODO: serialize size
+
+    private int currentInventoryItemIdx = 0;
+    private Item CurrentItem => inventory.Slots[currentInventoryItemIdx]?.item;
+
     [Header("References")]
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private TextMeshProUGUI stateText;
+    [SerializeField] private TextMeshProUGUI itemText;
     [SerializeField] private CameraRig cameraRig;
 
     [Header("Collision")]
@@ -41,6 +52,11 @@ public class PlayerStateDriver3D : MonoBehaviour
         machine = builder.Build();
     }
 
+    private void Start()
+    {
+        inventory.AddItem(placeholderItem, 1);
+    }
+
     private void Update()
     {
         ctx.time += Time.deltaTime;
@@ -70,6 +86,8 @@ public class PlayerStateDriver3D : MonoBehaviour
         if (path == lastStatePath) return;
         lastStatePath = path;
         stateText.text = path;
+
+        UpdateItemText();
     }
 
     private void OnEnable() => controls.Enable();
@@ -113,6 +131,12 @@ public class PlayerStateDriver3D : MonoBehaviour
         controls.Player.Sprint.canceled += _ =>
         {
             ctx.sprintHeld = false;
+        };
+
+        // Use item
+        controls.Player.Use.performed += _ =>
+        {
+            UseCurrentItem();
         };
     }
 
@@ -159,4 +183,26 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private static string StatePath(State s) =>
         string.Join("\n > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
+
+    public bool Throw(ThrowableItem throwable)
+    {
+        // TODO: throw he throwable.prefab instead of throwing an exception
+        throw new NotImplementedException();
+    }
+
+    private void UseCurrentItem()
+    {
+        if (CurrentItem == null) return;
+
+        if (CurrentItem.Use(this))
+        {
+            // TODO: uncomment after implementing RemoveItem(itemIdx, count)
+            // inventory.RemoveItem(currentItemIdx, 1)
+        }
+    }
+
+    private void UpdateItemText()
+    {
+        itemText.text = CurrentItem != null ? CurrentItem.itemName : "No item";
+    }
 }
