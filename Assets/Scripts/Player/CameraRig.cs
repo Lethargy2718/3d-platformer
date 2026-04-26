@@ -13,6 +13,8 @@ public class CameraRig : MonoBehaviour
     private Vector2 lookInput;
     private PlayerControls controls;
 
+    public Vector3 AimDirection => transform.forward;
+
     private void Awake()
     {
         controls = new PlayerControls();
@@ -29,7 +31,7 @@ public class CameraRig : MonoBehaviour
         Pitch -= lookInput.y * sensitivity;
         Pitch = Mathf.Clamp(Pitch, pitchMin, pitchMax);
 
-        transform.position = target.position;
-        transform.rotation = Quaternion.Euler(Pitch, Yaw, 0f);
+        transform.SetPositionAndRotation(target.position, Quaternion.Euler(Pitch, Yaw, 0f));
+
     }
 }

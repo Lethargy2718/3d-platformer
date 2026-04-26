@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -17,14 +18,19 @@ public class PlayerController : MonoBehaviour
     public PlayerContext Context => ctx;
 
     // TODO: remove
-    public Item placeholderItem;
-    public Item placeholderItem2;
+    public Item healthItem;
+    public Item grenadeItem;
 
     [Header("Debug")]
     [SerializeField] private TextMeshProUGUI stateText;
 
     [Header("Camera")]
     [SerializeField] private Transform cameraTarget;
+
+    [Header("Throwing")]
+    [SerializeField] private float throwForce = 12f;
+    [SerializeField] private Transform aimOrigin;
+
 
     private PlayerInputHandler inputHandler;
     private PlayerCollisionSensor collisionSensor;
@@ -67,8 +73,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        inventoryController.Inventory.AddItem(placeholderItem, 37);
-        inventoryController.Inventory.AddItem(placeholderItem2, 20);
+        inventoryController.Inventory.AddItem(healthItem, 37);
+        inventoryController.Inventory.AddItem(grenadeItem, 37);
 
         inventoryController.Init(this, inputHandler);
     }
@@ -95,10 +101,16 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate() => UpdateStateText();
 
+    // TODO: throw script
     public bool Throw(ThrowableItem throwable)
     {
-        // TODO: throw the throwable.prefab instead of throwing an exception
-        throw new NotImplementedException();
+        GameObject thrown = Instantiate(throwable.prefab, aimOrigin.position, Quaternion.LookRotation(ctx.aimDirection));
+        if (thrown.TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.linearVelocity = ctx.aimDirection * throwForce;
+            return true;
+        }
+        return false;
     }
 
     private void CalculateMoveDirection()

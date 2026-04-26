@@ -46,6 +46,7 @@ public class PlayerContext
 
     // Look
     [HideInInspector] public float yaw;
+    [HideInInspector] public Vector3 aimDirection;
 
     [Header("Horizontal Movement")]
     public float maxWalkSpeed = 6f;

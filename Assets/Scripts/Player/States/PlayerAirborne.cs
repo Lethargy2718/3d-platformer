@@ -24,14 +24,15 @@ public class PlayerAirborne : State
 
     protected override void OnCollision(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            if (contact.normal.y < ctx.maxWallNormalY)
-            {
-                ctx.frameVelocity.x = 0;
-                ctx.frameVelocity.z = 0;
-            }
-        }
+        // TODO: go back to this
+        //foreach (ContactPoint contact in collision.contacts)
+        //{
+        //    if (contact.normal.y < ctx.maxWallNormalY)
+        //    {
+        //        ctx.frameVelocity.x = 0;
+        //        ctx.frameVelocity.z = 0;
+        //    }
+        //}
     }
 
     private void HandleGravity(float dt)

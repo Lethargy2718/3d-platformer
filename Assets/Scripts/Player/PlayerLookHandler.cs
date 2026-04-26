@@ -17,6 +17,7 @@ public class PlayerLookHandler : MonoBehaviour
     public void ApplyLook()
     {
         ctx.yaw = cameraRig.Yaw;
+        ctx.aimDirection = cameraRig.AimDirection;
         rb.MoveRotation(Quaternion.Euler(0f, ctx.yaw, 0f));
     }
 }

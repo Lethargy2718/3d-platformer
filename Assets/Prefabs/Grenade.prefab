@@ -224,8 +224,6 @@ GameObject:
   - component: {fileID: 4603127278964916028}
   - component: {fileID: 8775991056586535658}
   - component: {fileID: 6996271743744389631}
-  - component: {fileID: 5386387457109328896}
-  - component: {fileID: 3388521463150202037}
   m_Layer: 6
   m_Name: Grenade
   m_TagString: Untagged
@@ -297,29 +295,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5386387457109328896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6919348828491188698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307124edc76fa3e45a5d031148659bc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  rotationSpeed: 180
---- !u!114 &3388521463150202037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6919348828491188698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40d8e3f5efbc19140b819e9ad4bf0868, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PIckupItem
-  item: {fileID: 0}

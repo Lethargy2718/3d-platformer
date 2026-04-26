@@ -632,7 +632,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1dae431b-f395-4fbc-8fde-8ece91143043"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -2925,9 +2925,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: aimOrigin
+      value: 
+      objectReference: {fileID: 362537933}
+    - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: stateText
       value: 
       objectReference: {fileID: 328367006}
+    - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: healthItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 61e0be275a0614e489772dca85efaa88, type: 2}
+    - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: throwForce
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: grenadeItem
+      value: 
+      objectReference: {fileID: 11400000, guid: 4d51ebc143607cd4289dcc7f04bb1a17, type: 2}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: cameraTarget
       value: 
@@ -2996,6 +3012,10 @@ PrefabInstance:
       propertyPath: toolbarUI
       value: 
       objectReference: {fileID: 1258164137}
+    - target: {fileID: 8662628565475785226, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
