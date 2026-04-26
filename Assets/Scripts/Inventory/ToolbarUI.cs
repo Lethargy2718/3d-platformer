@@ -18,11 +18,11 @@ public class ToolbarUI : MonoBehaviour
         for (int i = 0; i < inventory.Slots.Count; i++)
         {
             var ui = Instantiate(slotPrefab, transform);
-            ui.Refresh(inventory.Slots[i]);
+            ui.Refresh(inventory[i]);
             slotUIs[i] = ui;
         }
 
-        inventory.SlotChanged += idx => slotUIs[idx].Refresh(inventory.Slots[idx]);
+        inventory.SlotChanged += idx => slotUIs[idx].Refresh(inventory[idx]);
         SetHighlight(currentIdx);
     }
 

@@ -32,6 +32,5 @@ public class CameraRig : MonoBehaviour
         Pitch = Mathf.Clamp(Pitch, pitchMin, pitchMax);
 
         transform.SetPositionAndRotation(target.position, Quaternion.Euler(Pitch, Yaw, 0f));
-
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -104,7 +103,7 @@ public class PlayerController : MonoBehaviour
     // TODO: throw script
     public bool Throw(ThrowableItem throwable)
     {
-        GameObject thrown = Instantiate(throwable.prefab, aimOrigin.position, Quaternion.LookRotation(ctx.aimDirection));
+        GameObject thrown = Instantiate(throwable.throwableItemPrefab, aimOrigin.position, Quaternion.LookRotation(ctx.aimDirection));
         if (thrown.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.linearVelocity = ctx.aimDirection * throwForce;

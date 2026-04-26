@@ -8,7 +8,9 @@ public class Inventory
 
     private readonly int size;
     private readonly InventorySlot[] slots;
+
     public IReadOnlyList<InventorySlot> Slots => slots;
+    public InventorySlot this[int idx] => slots[idx];
 
     public Inventory(int size)
     {

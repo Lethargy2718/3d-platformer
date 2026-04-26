@@ -16,4 +16,6 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 0024927018413fc4c8b422b5d9835ef3, type: 3}
   itemDescription: Explodes
   cooldown: 0
-  prefab: {fileID: 4008425189362468630, guid: 00d41964b3c1a554fbe375905f029a68, type: 3}
+  pickupPrefab: {fileID: 4246041146877919703, guid: db290d9d83678d84d92331ef473f7027, type: 3}
+  heldPrefab: {fileID: 1115856314895950536, guid: 830590fe09adae04fb5d66212ff14e30, type: 3}
+  throwableItemPrefab: {fileID: 4008425189362468630, guid: 00d41964b3c1a554fbe375905f029a68, type: 3}

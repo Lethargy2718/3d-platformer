@@ -2511,6 +2511,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1134890308}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1490388319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1490388320}
+  m_Layer: 3
+  m_Name: ItemHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1490388320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490388319}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.55, y: -0.423, z: 0.471}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1646379098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1623538642
 GameObject:
   m_ObjectHideFlags: 0
@@ -2962,11 +2993,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.bobAmplitude
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.bobFrequency
-      value: 1.3
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.dashCooldown
@@ -2978,11 +3009,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.maxFovAmount
-      value: 30
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.maxWalkSpeed
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: ctx.bobXMultiplier
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7218170633955445857, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: ctx.groundFriction
@@ -3012,13 +3047,20 @@ PrefabInstance:
       propertyPath: toolbarUI
       value: 
       objectReference: {fileID: 1258164137}
+    - target: {fileID: 8473924921568988865, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      propertyPath: itemHolder
+      value: 
+      objectReference: {fileID: 1490388320}
     - target: {fileID: 8662628565475785226, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
       propertyPath: m_Interpolate
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1897974967407689552, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1490388320}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec1bf8086b4804b43ad70344e3d7648a, type: 3}
 --- !u!1660057539 &9223372036854775807

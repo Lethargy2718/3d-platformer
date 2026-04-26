@@ -6,7 +6,8 @@ public abstract class Item : ScriptableObject
     public Sprite itemIcon;
     public string itemDescription;
     public float cooldown;
-    public GameObject prefab;
+    public GameObject pickupPrefab;
+    public GameObject heldPrefab;
 
     public abstract bool Use(PlayerController player);
 }
