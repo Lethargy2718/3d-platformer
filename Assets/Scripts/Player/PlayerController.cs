@@ -16,10 +16,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerContext ctx = new PlayerContext();
     public PlayerContext Context => ctx;
 
-    // TODO: remove
-    public Item healthItem;
-    public Item grenadeItem;
-
     [Header("Debug")]
     [SerializeField] private TextMeshProUGUI stateText;
 
@@ -72,9 +68,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        inventoryController.Inventory.AddItem(healthItem, 37);
-        inventoryController.Inventory.AddItem(grenadeItem, 37);
-
         inventoryController.Init(this, inputHandler);
     }
 

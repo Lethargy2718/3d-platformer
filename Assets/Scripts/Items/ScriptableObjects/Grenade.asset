@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ee437dafb636374e8a510bd32c3650c, type: 3}
+  m_Script: {fileID: 11500000, guid: 882fea6ac67ef0d42960edd1cf786ec6, type: 3}
   m_Name: Grenade
   m_EditorClassIdentifier: Assembly-CSharp::ThrowableItem
   itemName: Grenade
   itemIcon: {fileID: 21300000, guid: 0024927018413fc4c8b422b5d9835ef3, type: 3}
-  itemDescription: Explodes
+  itemDescription: Explodes (can hurt you)
   cooldown: 0
   pickupPrefab: {fileID: 4765005759105610168, guid: ab7636b5fabb029499b3e67574ddf7bb, type: 3}
   heldPrefab: {fileID: 1115856314895950536, guid: 830590fe09adae04fb5d66212ff14e30, type: 3}

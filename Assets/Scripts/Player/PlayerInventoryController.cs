@@ -26,7 +26,7 @@ public class PlayerInventoryController : MonoBehaviour
         this.player = player;
 
         toolbarUI.Init(Inventory);
-        Hold(Inventory[currentSlotIndex].item.heldPrefab);
+        Hold(Inventory[currentSlotIndex]?.item?.heldPrefab);
 
         inputHandler.OnScrolled += HandleScroll;
         inputHandler.OnUsePressed += HandleUse;
@@ -57,7 +57,6 @@ public class PlayerInventoryController : MonoBehaviour
         if (CurrentItem.Use(player))
             Inventory.RemoveItem(currentSlotIndex, 1);
     }
-
 
     private void Hold(GameObject heldPrefab)
     {
