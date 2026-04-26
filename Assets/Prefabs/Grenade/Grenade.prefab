@@ -66,7 +66,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0.025
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -81,7 +81,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &5544786941737561799
 MonoBehaviour:
@@ -95,6 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84788433afd1d844e82641a7511fc0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grenade
+  fuseDuration: 1.25
+  explosionRadius: 8
+  explosionForce: 400
+  dmg: 25
+  ps: {fileID: 4974460791158339750, guid: c154c88945813b04597016e449ce96da, type: 3}
 --- !u!1001 &6199352787611870684
 PrefabInstance:
   m_ObjectHideFlags: 0

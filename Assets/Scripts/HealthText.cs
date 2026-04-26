@@ -12,6 +12,6 @@ public class HealthText : MonoBehaviour
 
     private void Update()
     {
-        healthText.text = $"{hc.Health} / {hc.MaxHealth}";
+        healthText.text = $"{Mathf.Ceil(hc.Health)} / {Mathf.Ceil(hc.MaxHealth)}";
     }
 }
