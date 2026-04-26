@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4603127278964916028}
   - component: {fileID: 8775991056586535658}
   - component: {fileID: 6996271743744389631}
+  - component: {fileID: 5544786941737561799}
   m_Layer: 6
   m_Name: Grenade
   m_TagString: Untagged
@@ -82,6 +83,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &5544786941737561799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6919348828491188698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84788433afd1d844e82641a7511fc0cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grenade
 --- !u!1001 &6199352787611870684
 PrefabInstance:
   m_ObjectHideFlags: 0

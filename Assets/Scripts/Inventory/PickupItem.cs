@@ -4,11 +4,12 @@ public class PickupItem : MonoBehaviour
 {
     public Item item;
 
-    protected void OnTriggerEnter2D(Collider2D collision)
+    public void GiveItemToPlayer(PlayerController player)
     {
-        if (collision.TryGetComponent<PlayerController>(out var player))
+        // If given successfully
+        if (player.Inventory.AddItem(item, 1) == 0) 
         {
-            player.Inventory.AddItem(item, 1);
-        }
+            Destroy(gameObject);
+        } 
     }
 }

@@ -190,35 +190,38 @@ MonoBehaviour:
     dashDirection: {x: 0, y: 0, z: 0}
     hasAirDashed: 0
     yaw: 0
-    maxWalkSpeed: 6
-    sprintMultiplier: 1.6
-    groundAcceleration: 80
-    groundFriction: 10
-    airAcceleration: 10
-    airFriction: 10
-    bobFrequency: 10
-    bobAmplitude: 0.05
+    aimDirection: {x: 0, y: 0, z: 0}
+    maxWalkSpeed: 10
+    sprintMultiplier: 2
+    groundAcceleration: 100
+    groundFriction: 6
+    airAcceleration: 50
+    airFriction: 3
+    bobFrequency: 1.1
+    bobAmplitude: 0.1
     bobCameraSmoothing: 12
-    bobXMultiplier: 0.5
+    bobXMultiplier: 0.01
     fovSmoothing: 8
-    maxFovAmount: 15
+    maxFovAmount: 25
     fovReferenceSpeed: 40
-    jumpHeight: 2
+    jumpHeight: 5
     coyoteTime: 0.15
     jumpBuffer: 0.15
     jumpEndEarlyGravityModifier: 3
     fallAcceleration: 35
     maxFallSpeed: 30
-    groundingForce: -2
-    dashSpeed: 14
-    dashDuration: 0.18
-    dashCooldown: 1
+    groundingForce: -1.5
+    dashSpeed: 40
+    dashDuration: 0.25
+    dashCooldown: 0.3
     dashBuffer: 0.15
     maxWallNormalY: 0.9
-  placeholderItem: {fileID: 11400000, guid: 61e0be275a0614e489772dca85efaa88, type: 2}
-  placeholderItem2: {fileID: 11400000, guid: 4d51ebc143607cd4289dcc7f04bb1a17, type: 2}
+  healthItem: {fileID: 11400000, guid: 61e0be275a0614e489772dca85efaa88, type: 2}
+  grenadeItem: {fileID: 11400000, guid: 4d51ebc143607cd4289dcc7f04bb1a17, type: 2}
   stateText: {fileID: 0}
   cameraTarget: {fileID: 0}
+  throwForce: 35
+  aimOrigin: {fileID: 268849471272871464}
 --- !u!114 &8310563657471568983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,7 +291,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4739c01f6d749044fa8e9d544b3726df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventoryController
+  itemHolder: {fileID: 2576073274157321761}
   toolbarUI: {fileID: 0}
+  inventorySize: 8
 --- !u!1 &3088218753096106335
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,6 +483,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 268849471272871464}
+  - {fileID: 2576073274157321761}
   m_Father: {fileID: 5959600036799934791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4589103526964172731
@@ -496,3 +502,34 @@ MonoBehaviour:
   sensitivity: 0.2
   pitchMin: -90
   pitchMax: 90
+--- !u!1 &8180564307845296102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2576073274157321761}
+  m_Layer: 3
+  m_Name: ItemHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2576073274157321761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8180564307845296102}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.55, y: -0.423, z: 0.471}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1897974967407689552}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
