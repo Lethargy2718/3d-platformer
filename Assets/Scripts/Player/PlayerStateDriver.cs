@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -10,17 +9,20 @@ public class PlayerStateDriver3D : MonoBehaviour
     public PlayerContext ctx = new PlayerContext();
 
     // TODO: remove
-    public Item placeholderItem = null;
+    public Item placeholderItem;
+    public Item placeholderItem2;
 
     public Inventory inventory = new(8); // TODO: serialize size
 
     private int currentInventoryItemIdx = 0;
-    private Item CurrentItem => inventory.Slots[currentInventoryItemIdx]?.item;
+
+    private InventorySlot CurrentSlot => inventory.Slots[currentInventoryItemIdx];
+    private Item CurrentItem => CurrentSlot?.item;
 
     [Header("References")]
-    [SerializeField] private Transform cameraTarget;
+    [SerializeField] private ToolbarUI toolbarUI;
     [SerializeField] private TextMeshProUGUI stateText;
-    [SerializeField] private TextMeshProUGUI itemText;
+    [SerializeField] private Transform cameraTarget;
     [SerializeField] private CameraRig cameraRig;
 
     [Header("Collision")]
@@ -54,7 +56,9 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private void Start()
     {
-        inventory.AddItem(placeholderItem, 1);
+        inventory.AddItem(placeholderItem, 37);
+        inventory.AddItem(placeholderItem2, 20);
+        toolbarUI.Init(inventory);
     }
 
     private void Update()
@@ -81,13 +85,7 @@ public class PlayerStateDriver3D : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (stateText == null) return;
-        var path = StatePath(machine.Root.Leaf());
-        if (path == lastStatePath) return;
-        lastStatePath = path;
-        stateText.text = path;
-
-        UpdateItemText();
+        UpdateStateText();
     }
 
     private void OnEnable() => controls.Enable();
@@ -138,6 +136,22 @@ public class PlayerStateDriver3D : MonoBehaviour
         {
             UseCurrentItem();
         };
+
+        // Scroll toolbar
+        controls.Player.Scroll.performed += ctx =>
+        {
+            float scrollDelta = ctx.ReadValue<Vector2>().y;
+            if (scrollDelta != 0)
+            {
+                int delta = scrollDelta > 0 ? 1 : -1;
+                int newIndex = (currentInventoryItemIdx + delta + inventory.Slots.Count) % inventory.Slots.Count;
+                if (newIndex != currentInventoryItemIdx)
+                {
+                    currentInventoryItemIdx = newIndex;
+                    toolbarUI.SetHighlight(currentInventoryItemIdx);
+                }
+            }
+        };
     }
 
     private void CalculateMoveDirection()
@@ -184,6 +198,15 @@ public class PlayerStateDriver3D : MonoBehaviour
     private static string StatePath(State s) =>
         string.Join("\n > ", s.PathToRoot().Reverse().Select(n => n.GetType().Name));
 
+    private void UpdateStateText()
+    {
+        if (stateText == null) return;
+        var path = StatePath(machine.Root.Leaf());
+        if (path == lastStatePath) return;
+        lastStatePath = path;
+        stateText.text = path;
+    }
+
     public bool Throw(ThrowableItem throwable)
     {
         // TODO: throw he throwable.prefab instead of throwing an exception
@@ -196,13 +219,7 @@ public class PlayerStateDriver3D : MonoBehaviour
 
         if (CurrentItem.Use(this))
         {
-            // TODO: uncomment after implementing RemoveItem(itemIdx, count)
-            // inventory.RemoveItem(currentItemIdx, 1)
+            inventory.RemoveItem(currentInventoryItemIdx, 1);
         }
-    }
-
-    private void UpdateItemText()
-    {
-        itemText.text = CurrentItem != null ? CurrentItem.itemName : "No item";
     }
 }

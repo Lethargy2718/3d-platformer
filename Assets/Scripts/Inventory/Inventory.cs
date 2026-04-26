@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory
 {
-    public event Action<int> SlotChanged;
+    public event Action<int> SlotChanged; // sends slot idx
 
     private readonly int size;
     private readonly InventorySlot[] slots;
@@ -68,11 +68,26 @@ public class Inventory
             {
                 slot = new InventorySlot((Item)item, Mathf.Min(item.MaxStackSize, count));
                 count -= slot.count;
-
                 SlotChanged?.Invoke(i);
             }
         }
 
         return count;
+    }
+
+    public int RemoveItem(int idx, int count)
+    {
+        if (idx < 0 || idx >= size || count <= 0) return 0;
+
+       ref var slot = ref slots[idx];
+
+        if (slot == null) return 0;
+
+        int toRemove = Mathf.Min(slot.count, count);
+        slot.count -= toRemove;
+        if (slot.count == 0) slot = null;
+        SlotChanged?.Invoke(idx);
+
+        return toRemove;
     }
 }

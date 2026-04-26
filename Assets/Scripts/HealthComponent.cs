@@ -63,7 +63,7 @@ public class HealthComponent : MonoBehaviour
 
     private void Start()
     {
-        Health = MaxHealth;
+        //Health = MaxHealth;
     }
 
     public void TakeDamage(float dmg, Vector2 attackDirection, DamageType damageType = DamageType.Normal)

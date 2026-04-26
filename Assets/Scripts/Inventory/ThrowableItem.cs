@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public abstract class ThrowableItem : Item, IStackable
+[CreateAssetMenu(menuName = "Items/Throwable")]
+public class ThrowableItem : Item, IStackable
 {
     public override bool Use(PlayerStateDriver3D player)
     {
