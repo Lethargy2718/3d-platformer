@@ -6,9 +6,9 @@ public class PickupItem : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<PlayerStateDriver3D>(out var player))
+        if (collision.TryGetComponent<PlayerController>(out var player))
         {
-            player.inventory.AddItem(item, 1);
+            player.Inventory.AddItem(item, 1);
         }
     }
 }

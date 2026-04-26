@@ -24,7 +24,7 @@ public static class MovementUtils
             float dot = Vector3.Dot(velocity.normalized, targetDirection);
             if (dot < 0f) // angle > 90
             {
-                acceleration *= 4f; // TODO: add to ctx
+                acceleration *= 4f; // TODO: add to Context
             }
             velocity = Vector3.MoveTowards(velocity, targetVelocity, acceleration * dt);
         }

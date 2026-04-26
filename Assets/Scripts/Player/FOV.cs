@@ -3,7 +3,7 @@ using Cinemachine;
 
 public class FOV : MonoBehaviour
 {
-    [SerializeField] private PlayerStateDriver3D player;
+    [SerializeField] private PlayerController player;
     [SerializeField] private CinemachineVirtualCamera vcam;
     private float baseFOV;
     private PlayerContext ctx;
@@ -11,7 +11,7 @@ public class FOV : MonoBehaviour
     void Start()
     {
         baseFOV = vcam.m_Lens.FieldOfView;
-        ctx = player.ctx;
+        ctx = player.Context;
     }
 
     void LateUpdate()

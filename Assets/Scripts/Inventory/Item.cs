@@ -8,5 +8,5 @@ public abstract class Item : ScriptableObject
     public float cooldown;
     public GameObject prefab;
 
-    public abstract bool Use(PlayerStateDriver3D player);
+    public abstract bool Use(PlayerController player);
 }

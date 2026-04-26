@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HeadBob : MonoBehaviour
 {
-    [SerializeField] private PlayerStateDriver3D player;
+    [SerializeField] private PlayerController player;
     public Transform cam;
 
     private Vector3 baseLocalPos;
@@ -16,7 +16,7 @@ public class HeadBob : MonoBehaviour
         baseLocalPos = cam.localPosition;
 
         // TODO: make context a scriptable object and supply it from the inspector instead.
-        ctx = player.ctx;
+        ctx = player.Context;
     }
 
     private void LateUpdate()
@@ -34,11 +34,11 @@ public class HeadBob : MonoBehaviour
         }
 
         bobTime += Time.deltaTime * ctx.bobFrequency * speed;
-        Vector3 bobOffset = new Vector3(
+        Vector3 bobOffset = ctx.bobAmplitude * strength * new Vector3(
             Mathf.Cos(bobTime * ctx.bobXMultiplier),
             Mathf.Sin(bobTime),
             0f
-        ) * ctx.bobAmplitude * strength;
+        );
 
         cam.localPosition = Vector3.Lerp(cam.localPosition, baseLocalPos + bobOffset, cameraT);
     }
