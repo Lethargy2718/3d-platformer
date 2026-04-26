@@ -77,7 +77,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             float delta = c.ReadValue<Vector2>().y;
             if (delta != 0f)
-                OnScrolled?.Invoke(delta > 0f ? 1 : -1);
+                OnScrolled?.Invoke(delta > 0f ? -1 : 1);
         };
     }
 }
