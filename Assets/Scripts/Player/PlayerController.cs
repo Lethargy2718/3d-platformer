@@ -96,10 +96,11 @@ public class PlayerController : MonoBehaviour
     // TODO: throw script
     public bool Throw(ThrowableItem throwable)
     {
-        GameObject thrown = Instantiate(throwable.throwableItemPrefab, aimOrigin.position, Quaternion.LookRotation(ctx.aimDirection));
+        Vector3 aimDir = GetAimDirection();
+        GameObject thrown = Instantiate(throwable.throwableItemPrefab, aimOrigin.position, Quaternion.LookRotation(aimDir));
         if (thrown.TryGetComponent<Rigidbody>(out var rb))
         {
-            rb.linearVelocity = ctx.aimDirection * throwForce;
+            rb.linearVelocity = aimDir * throwForce;
             return true;
         }
         return false;
@@ -130,5 +131,30 @@ public class PlayerController : MonoBehaviour
         if (path == lastStatePath) return;
         lastStatePath = path;
         stateText.text = path;
+    }
+
+    // TODO: move somewhere else and serialize fields
+    private Vector3 GetAimDirection()
+    {
+        Camera cam = Camera.main;
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        Vector3 origin = aimOrigin.position;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        {
+            Vector3 toHit = hit.point - origin;
+
+            // Corrects reversed shots
+            if (Vector3.Dot(toHit, cam.transform.forward) < 0.1f)
+            {
+                Vector3 fallback = ray.GetPoint(25f);
+                return (fallback - origin).normalized;
+            }
+
+            return toHit.normalized;
+        }
+
+        return (ray.GetPoint(25f) - origin).normalized;
     }
 }

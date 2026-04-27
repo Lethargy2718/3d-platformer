@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class PlayerInventoryController : MonoBehaviour
 {
-    [SerializeField] private Transform itemHolder;
+    [SerializeField] private Transform viewItemHolder;
+    [SerializeField] private Transform worldItemHolder;
     [SerializeField] private ToolbarUI toolbarUI;
     [SerializeField] private int inventorySize = 8;
 
@@ -14,7 +15,9 @@ public class PlayerInventoryController : MonoBehaviour
 
     private InventorySlot CurrentSlot => Inventory[currentSlotIndex];
     private Item CurrentItem => CurrentSlot?.item;
-    private GameObject currentHeldObject;
+    private GameObject currentViewObject;
+    private GameObject currentWorldObject;
+
 
     private void Awake()
     {
@@ -26,7 +29,7 @@ public class PlayerInventoryController : MonoBehaviour
         this.player = player;
 
         toolbarUI.Init(Inventory);
-        Hold(Inventory[currentSlotIndex]?.item?.heldPrefab);
+        UpdateHold();
 
         inputHandler.OnScrolled += HandleScroll;
         inputHandler.OnUsePressed += HandleUse;
@@ -35,7 +38,7 @@ public class PlayerInventoryController : MonoBehaviour
 
     private void OnInventorySlotChanged(int idx)
     {
-        if (idx == currentSlotIndex && Inventory[idx] == null) Hold(null);
+        if (idx == currentSlotIndex) UpdateHold();
     }
 
     private void HandleScroll(int delta)
@@ -47,7 +50,7 @@ public class PlayerInventoryController : MonoBehaviour
 
         currentSlotIndex = newIndex;
         toolbarUI.SetHighlight(currentSlotIndex);
-        Hold(Inventory[currentSlotIndex]?.item?.heldPrefab);
+        UpdateHold();
     }
 
     private void HandleUse()
@@ -58,10 +61,18 @@ public class PlayerInventoryController : MonoBehaviour
             Inventory.RemoveItem(currentSlotIndex, 1);
     }
 
-    private void Hold(GameObject heldPrefab)
+    private void Hold(ref GameObject currentObject, GameObject heldPrefab, Transform holder)
     {
-        Destroy(currentHeldObject);
+        Destroy(currentObject);
         if (heldPrefab == null) return;
-        currentHeldObject = Instantiate(heldPrefab, itemHolder);
+        currentObject = Instantiate(heldPrefab, holder);
+    }
+
+    private void UpdateHold()
+    {
+        var item = Inventory.Slots[currentSlotIndex]?.item;
+
+        Hold(ref currentViewObject, item != null ? item.viewPrefab : null, viewItemHolder);
+        Hold(ref currentWorldObject, item != null ? item.worldPrefab : null, worldItemHolder);
     }
 }
