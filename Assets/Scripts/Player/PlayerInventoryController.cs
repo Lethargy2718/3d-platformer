@@ -16,7 +16,7 @@ public class PlayerInventoryController : MonoBehaviour
     private Item CurrentItem => CurrentSlot?.item;
     private GameObject currentHeldObject;
 
-    private void Start()
+    private void Awake()
     {
         Inventory = new Inventory(inventorySize);
     }
