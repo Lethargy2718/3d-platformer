@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory
 {
-    public event Action<int> SlotChanged; // sends slot idx
+    public event Action<int, SlotChangeType> SlotChanged; // sends slot idx and change type
 
     private readonly int size;
     private readonly InventorySlot[] slots;
@@ -34,8 +34,7 @@ public class Inventory
             {
                 slot = new InventorySlot(item, 1);
                 count--;
-
-                SlotChanged?.Invoke(i);
+                SlotChanged?.Invoke(i, SlotChangeType.Item);
             }
         }
 
@@ -57,7 +56,7 @@ public class Inventory
                 slot.count += toAdd;
                 count -= toAdd;
 
-                SlotChanged?.Invoke(i);
+                SlotChanged?.Invoke(i, SlotChangeType.Number);
             }
         }
 
@@ -70,7 +69,7 @@ public class Inventory
             {
                 slot = new InventorySlot((Item)item, Mathf.Min(item.MaxStackSize, count));
                 count -= slot.count;
-                SlotChanged?.Invoke(i);
+                SlotChanged?.Invoke(i, SlotChangeType.Item);
             }
         }
 
@@ -87,9 +86,19 @@ public class Inventory
 
         int toRemove = Mathf.Min(slot.count, count);
         slot.count -= toRemove;
-        if (slot.count == 0) slot = null;
-        SlotChanged?.Invoke(idx);
+
+        SlotChangeType type = SlotChangeType.Number;
+
+        if (slot.count <= 0)
+        {
+            type = SlotChangeType.Item;
+            UnityEngine.Object.Destroy(slot.behavior); // Todo: possibly move this somewhere else using the event
+            slot = null;
+        }
+        SlotChanged?.Invoke(idx, type);
 
         return toRemove;
     }
 }
+
+public enum SlotChangeType { Number, Item }

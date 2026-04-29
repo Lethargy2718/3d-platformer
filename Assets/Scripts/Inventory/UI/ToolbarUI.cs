@@ -22,7 +22,7 @@ public class ToolbarUI : MonoBehaviour
             slotUIs[i] = ui;
         }
 
-        inventory.SlotChanged += idx => slotUIs[idx].Refresh(inventory[idx]);
+        inventory.SlotChanged += (idx, _) => slotUIs[idx].Refresh(inventory[idx]);
         SetHighlight(currentIdx);
     }
 

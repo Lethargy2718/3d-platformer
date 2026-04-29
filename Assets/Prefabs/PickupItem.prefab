@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d8e3f5efbc19140b819e9ad4bf0868, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PIckupItem
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 454ef16adc99deb40a3a88661bd9e866, type: 2}
 --- !u!1 &7353195147811955403
 GameObject:
   m_ObjectHideFlags: 0

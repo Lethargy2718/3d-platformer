@@ -33,7 +33,7 @@ public abstract class ItemBehavior : MonoBehaviour
         OnUseEnd();
     }
 
-    private void Tick(float dt)
+    public void Tick(float dt)
     {
         if (useHeld) OnUpdateHold(dt);
         OnTick(dt);

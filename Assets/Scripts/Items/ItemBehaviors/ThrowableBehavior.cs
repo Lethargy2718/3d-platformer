@@ -13,7 +13,7 @@ public class ThrowableBehavior : ItemBehavior<ThrowableItem>
 
     private void Throw()
     {
-        Vector3 aimDir = Player.GetAimDirection();
+        Vector3 aimDir = Player.GetAimDirection(Player.AimOrigin.position);
         GameObject thrown = Instantiate(Item.throwablePrefab, Player.AimOrigin.position, Quaternion.LookRotation(aimDir));
         if (thrown.TryGetComponent<Rigidbody>(out var rb))
         {

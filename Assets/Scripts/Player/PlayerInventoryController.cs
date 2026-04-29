@@ -9,12 +9,13 @@ public class PlayerInventoryController : MonoBehaviour
 
     public Inventory Inventory { get; private set; }
 
-    private int currentSlotIndex;
+    private int currentSlotIdx;
+    private Item CurrentItem => Inventory[currentSlotIdx]?.item;
+    private ItemBehavior CurrentBehavior  => Inventory[currentSlotIdx]?.behavior;
+
     private PlayerController player;
-    private Item CurrentItem => Inventory.Slots[currentSlotIndex]?.item;
-    private ItemBehavior currentBehavior;
-    private GameObject currentViewObject;
-    private GameObject currentWorldObject;
+    public GameObject currentViewObject;
+    public GameObject currentWorldObject;
 
     private void Awake()
     {
@@ -25,24 +26,37 @@ public class PlayerInventoryController : MonoBehaviour
     {
         this.player = player;
         toolbarUI.Init(Inventory);
+
         inputHandler.Scrolled += HandleScroll;
-        inputHandler.UsePressed += () => currentBehavior?.UseStart();
-        inputHandler.UseCanceled += () => currentBehavior?.UseEnd();
+        inputHandler.UsePressed += () => CurrentBehavior?.UseStart();
+        inputHandler.UseCanceled += () => CurrentBehavior?.UseEnd();
         Inventory.SlotChanged += OnInventorySlotChanged;
-        UpdateCurrentItem(0);
+
+        currentSlotIdx = 0;
+        RefreshCurrentSlot();
     }
 
-    private void OnInventorySlotChanged(int idx)
+    private void OnInventorySlotChanged(int idx, SlotChangeType type)
     {
-        if (idx == currentSlotIndex) UpdateCurrentItem(currentSlotIndex);
+        if (type == SlotChangeType.Item)
+        {
+            if (idx == currentSlotIdx) 
+                RefreshCurrentSlot();
+            else
+            {
+                var slot = Inventory[idx];
+                if (slot != null && slot.behavior != null) slot.behavior.Init(player, slot.item);
+            }
+        }
     }
 
     private void HandleScroll(int delta)
     {
         int count = Inventory.Slots.Count;
-        int newIndex = (currentSlotIndex + delta + count) % count;
-        if (newIndex == currentSlotIndex) return;
-        UpdateCurrentItem(newIndex);
+        int newIndex = (currentSlotIdx + delta + count) % count;
+        if (newIndex == currentSlotIdx) return;
+        SwitchSlot(newIndex);
+        toolbarUI.SetHighlight(newIndex);
     }
 
     private void HoldVisuals(ref GameObject currentObject, GameObject prefab, Transform holder)
@@ -57,27 +71,29 @@ public class PlayerInventoryController : MonoBehaviour
         HoldVisuals(ref currentWorldObject, item != null ? item.worldPrefab : null, worldItemHolder);
     }
 
-    private void UpdateBehavior(Item item)
+    private void SwitchSlot(int idx)
     {
-        if (currentBehavior) currentBehavior.OnUnequip();
-
-        Destroy(currentBehavior);
-        currentBehavior = null;
-
-        if (item == null || item.itemBehavior == null) return;
-
-        currentBehavior = Instantiate(item.itemBehavior, transform).GetComponent<ItemBehavior>();
-        currentBehavior.Init(player, item);
-        currentBehavior.OnEquip();
+        CurrentBehavior?.OnUnequip();
+        currentSlotIdx = idx;
+        CurrentBehavior?.OnEquip();
+        UpdateHoldVisuals(CurrentItem);
     }
 
-    private void UpdateCurrentItem(int newIdx)
+    private void RefreshCurrentSlot()
     {
-        currentSlotIndex = newIdx;
-        toolbarUI.SetHighlight(newIdx);
+        CurrentBehavior?.OnUnequip();
+        CurrentBehavior?.Init(player, CurrentItem);
+        CurrentBehavior?.OnEquip();
+        UpdateHoldVisuals(CurrentItem);
+    }
 
-        var item = CurrentItem;
-        UpdateHoldVisuals(item);
-        UpdateBehavior(item);
+    private void Update()
+    {
+        if (CurrentBehavior != null) CurrentBehavior.Tick(Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (CurrentBehavior != null) CurrentBehavior.FixedTick(Time.deltaTime);
     }
 }

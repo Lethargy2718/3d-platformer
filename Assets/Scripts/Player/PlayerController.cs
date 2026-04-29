@@ -11,7 +11,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerInventoryController))]
 public class PlayerController : MonoBehaviour
 {
-    public Inventory Inventory => inventoryController.Inventory;
+    public Inventory Inventory => InventoryController.Inventory;
 
     [SerializeField] private PlayerContext ctx = new PlayerContext();
     public PlayerContext Context => ctx;
@@ -28,10 +28,10 @@ public class PlayerController : MonoBehaviour
     public Transform AimOrigin => aimOrigin;
 
 
-    private PlayerInputHandler inputHandler;
-    private PlayerCollisionSensor collisionSensor;
-    private PlayerLookHandler lookHandler;
-    private PlayerInventoryController inventoryController;
+    public PlayerInputHandler InputHandler { get; private set; }
+    public PlayerCollisionSensor CollisionSensor { get; private set; }
+    public PlayerLookHandler LookHandler { get; private set; }
+    public PlayerInventoryController InventoryController { get; private set; }
 
     private StateMachine machine;
     private string lastStatePath;
@@ -51,15 +51,15 @@ public class PlayerController : MonoBehaviour
         Context.col = col;
         Context.transform = transform;
 
-        inputHandler = GetComponent<PlayerInputHandler>();
-        collisionSensor = GetComponent<PlayerCollisionSensor>();
-        lookHandler = GetComponent<PlayerLookHandler>();
-        inventoryController = GetComponent<PlayerInventoryController>();
+        InputHandler = GetComponent<PlayerInputHandler>();
+        CollisionSensor = GetComponent<PlayerCollisionSensor>();
+        LookHandler = GetComponent<PlayerLookHandler>();
+        InventoryController = GetComponent<PlayerInventoryController>();
 
         // NOTE: before inventory
-        inputHandler.Init(Context, cameraTarget);
-        collisionSensor.Init(Context, col);
-        lookHandler.Init(Context, rb);
+        InputHandler.Init(Context, cameraTarget);
+        CollisionSensor.Init(Context, col);
+        LookHandler.Init(Context, rb);
 
         // State machine
         var root = new PlayerRoot(null, Context);
@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        inventoryController.Init(this, inputHandler);
+        InventoryController.Init(this, InputHandler);
     }
 
     private void Update()
@@ -84,8 +84,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        collisionSensor.CheckCollisions();
-        lookHandler.ApplyLook();
+        CollisionSensor.CheckCollisions();
+        LookHandler.ApplyLook();
         Context.rb.linearVelocity = Context.frameVelocity;
         machine.FixedTick(Time.fixedDeltaTime);
     }
@@ -122,27 +122,25 @@ public class PlayerController : MonoBehaviour
     }
 
     // TODO: serialize fields
-    public Vector3 GetAimDirection()
+    public Vector3 GetAimDirection(Vector3 aimOrigin)
     {
         Camera cam = Camera.main;
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        Vector3 origin = aimOrigin.position;
-
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
-            Vector3 toHit = hit.point - origin;
+            Vector3 toHit = hit.point - aimOrigin;
 
             // Corrects reversed shots
             if (Vector3.Dot(toHit, cam.transform.forward) < 0.1f)
             {
                 Vector3 fallback = ray.GetPoint(25f);
-                return (fallback - origin).normalized;
+                return (fallback - aimOrigin).normalized;
             }
 
             return toHit.normalized;
         }
 
-        return (ray.GetPoint(25f) - origin).normalized;
+        return (ray.GetPoint(25f) - aimOrigin).normalized;
     }
 }
