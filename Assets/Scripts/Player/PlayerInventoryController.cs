@@ -1,4 +1,3 @@
-using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class PlayerInventoryController : MonoBehaviour
@@ -12,12 +11,10 @@ public class PlayerInventoryController : MonoBehaviour
 
     private int currentSlotIndex;
     private PlayerController player;
-
-    private InventorySlot CurrentSlot => Inventory[currentSlotIndex];
-    private Item CurrentItem => CurrentSlot?.item;
+    private Item CurrentItem => Inventory.Slots[currentSlotIndex]?.item;
+    private ItemBehavior currentBehavior;
     private GameObject currentViewObject;
     private GameObject currentWorldObject;
-
 
     private void Awake()
     {
@@ -27,52 +24,60 @@ public class PlayerInventoryController : MonoBehaviour
     public void Init(PlayerController player, PlayerInputHandler inputHandler)
     {
         this.player = player;
-
         toolbarUI.Init(Inventory);
-        UpdateHold();
-
-        inputHandler.OnScrolled += HandleScroll;
-        inputHandler.OnUsePressed += HandleUse;
+        inputHandler.Scrolled += HandleScroll;
+        inputHandler.UsePressed += () => currentBehavior?.UseStart();
+        inputHandler.UseCanceled += () => currentBehavior?.UseEnd();
         Inventory.SlotChanged += OnInventorySlotChanged;
+        UpdateCurrentItem(0);
     }
 
     private void OnInventorySlotChanged(int idx)
     {
-        if (idx == currentSlotIndex) UpdateHold();
+        if (idx == currentSlotIndex) UpdateCurrentItem(currentSlotIndex);
     }
 
     private void HandleScroll(int delta)
     {
         int count = Inventory.Slots.Count;
         int newIndex = (currentSlotIndex + delta + count) % count;
-
         if (newIndex == currentSlotIndex) return;
-
-        currentSlotIndex = newIndex;
-        toolbarUI.SetHighlight(currentSlotIndex);
-        UpdateHold();
+        UpdateCurrentItem(newIndex);
     }
 
-    private void HandleUse()
-    {
-        if (CurrentItem == null) return;
-
-        if (CurrentItem.Use(player))
-            Inventory.RemoveItem(currentSlotIndex, 1);
-    }
-
-    private void Hold(ref GameObject currentObject, GameObject heldPrefab, Transform holder)
+    private void HoldVisuals(ref GameObject currentObject, GameObject prefab, Transform holder)
     {
         Destroy(currentObject);
-        if (heldPrefab == null) return;
-        currentObject = Instantiate(heldPrefab, holder);
+        currentObject = prefab != null ? Instantiate(prefab, holder) : null;
     }
 
-    private void UpdateHold()
+    private void UpdateHoldVisuals(Item item)
     {
-        var item = Inventory.Slots[currentSlotIndex]?.item;
+        HoldVisuals(ref currentViewObject, item != null ? item.viewPrefab : null, viewItemHolder);
+        HoldVisuals(ref currentWorldObject, item != null ? item.worldPrefab : null, worldItemHolder);
+    }
 
-        Hold(ref currentViewObject, item != null ? item.viewPrefab : null, viewItemHolder);
-        Hold(ref currentWorldObject, item != null ? item.worldPrefab : null, worldItemHolder);
+    private void UpdateBehavior(Item item)
+    {
+        if (currentBehavior) currentBehavior.OnUnequip();
+
+        Destroy(currentBehavior);
+        currentBehavior = null;
+
+        if (item == null || item.itemBehavior == null) return;
+
+        currentBehavior = Instantiate(item.itemBehavior, transform).GetComponent<ItemBehavior>();
+        currentBehavior.Init(player, item);
+        currentBehavior.OnEquip();
+    }
+
+    private void UpdateCurrentItem(int newIdx)
+    {
+        currentSlotIndex = newIdx;
+        toolbarUI.SetHighlight(newIdx);
+
+        var item = CurrentItem;
+        UpdateHoldVisuals(item);
+        UpdateBehavior(item);
     }
 }

@@ -11,5 +11,5 @@ public abstract class Item : ScriptableObject
     public GameObject worldPrefab;
     public GameObject pickupPrefab;
 
-    public abstract bool Use(PlayerController player);
+    public ItemBehavior itemBehavior;
 }

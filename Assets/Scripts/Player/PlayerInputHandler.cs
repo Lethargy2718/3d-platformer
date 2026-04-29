@@ -3,13 +3,14 @@ using UnityEngine;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    public event Action OnJumpPressed;
-    public event Action OnJumpReleased;
-    public event Action OnDashPressed;
-    public event Action OnSprintPressed;
-    public event Action OnSprintReleased;
-    public event Action OnUsePressed;
-    public event Action<int> OnScrolled; // +1 scroll up, -1 scroll down
+    public event Action JumpPressed;
+    public event Action JumpReleased;
+    public event Action DashPressed;
+    public event Action SprintPressed;
+    public event Action SprintReleased;
+    public event Action UsePressed;
+    public event Action UseCanceled;
+    public event Action<int> Scrolled; // +1 scroll up, -1 scroll down
 
     private PlayerControls controls;
     private PlayerContext ctx;
@@ -43,13 +44,13 @@ public class PlayerInputHandler : MonoBehaviour
             ctx.jumpHeld = true;
             ctx.timeJumpWasPressed = ctx.time;
             ctx.hasBufferedJump = true;
-            OnJumpPressed?.Invoke();
+            JumpPressed?.Invoke();
         };
         controls.Player.Jump.canceled += _ =>
         {
             ctx.jumpHeld = false;
             ctx.jumpPressed = false;
-            OnJumpReleased?.Invoke();
+            JumpReleased?.Invoke();
         };
 
         // Dash 
@@ -62,22 +63,23 @@ public class PlayerInputHandler : MonoBehaviour
                 ? (cameraTarget.forward * ctx.moveInput.y
                  + cameraTarget.right * ctx.moveInput.x).normalized
                 : cameraTarget.forward;
-            OnDashPressed?.Invoke();
+            DashPressed?.Invoke();
         };
 
         // Sprint 
-        controls.Player.Sprint.performed += _ => { ctx.sprintHeld = true; OnSprintPressed?.Invoke(); };
-        controls.Player.Sprint.canceled += _ => { ctx.sprintHeld = false; OnSprintReleased?.Invoke(); };
+        controls.Player.Sprint.performed += _ => { ctx.sprintHeld = true; SprintPressed?.Invoke(); };
+        controls.Player.Sprint.canceled += _ => { ctx.sprintHeld = false; SprintReleased?.Invoke(); };
 
         // Use 
-        controls.Player.Use.performed += _ => OnUsePressed?.Invoke();
+        controls.Player.Use.performed += _ => UsePressed?.Invoke();
+        controls.Player.Use.canceled += _ => UseCanceled?.Invoke();
 
         // Scroll 
         controls.Player.Scroll.performed += c =>
         {
             float delta = c.ReadValue<Vector2>().y;
             if (delta != 0f)
-                OnScrolled?.Invoke(delta > 0f ? -1 : 1);
+                Scrolled?.Invoke(delta > 0f ? -1 : 1);
         };
     }
 }

@@ -19,5 +19,7 @@ MonoBehaviour:
   viewPrefab: {fileID: 1354776984627383932, guid: f2f60b71c1e1f904fbba67a2467fdb24, type: 3}
   worldPrefab: {fileID: 5215375080991321719, guid: 19c478a46bb33ac4696af8d716d67669, type: 3}
   pickupPrefab: {fileID: 7480930073224913069, guid: 76aaf7659be45c24fb4e7b5e0b6bbe69, type: 3}
+  itemBehavior: {fileID: 4014771595020015555, guid: 3754bf60d5721a6479400daa89a3080c, type: 3}
+  consumptionDuration: 0
   health: 10
   stackSize: 15

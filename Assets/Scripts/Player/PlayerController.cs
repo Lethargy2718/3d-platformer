@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [Header("Throwing")]
     [SerializeField] private float throwForce = 12f;
     [SerializeField] private Transform aimOrigin;
+    public Transform AimOrigin => aimOrigin;
 
 
     private PlayerInputHandler inputHandler;
@@ -93,19 +94,6 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate() => UpdateStateText();
 
-    // TODO: throw script
-    public bool Throw(ThrowableItem throwable)
-    {
-        Vector3 aimDir = GetAimDirection();
-        GameObject thrown = Instantiate(throwable.throwableItemPrefab, aimOrigin.position, Quaternion.LookRotation(aimDir));
-        if (thrown.TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.linearVelocity = aimDir * throwForce;
-            return true;
-        }
-        return false;
-    }
-
     private void CalculateMoveDirection()
     {
         if (Context.moveInput.sqrMagnitude < 0.001f)
@@ -133,8 +121,8 @@ public class PlayerController : MonoBehaviour
         stateText.text = path;
     }
 
-    // TODO: move somewhere else and serialize fields
-    private Vector3 GetAimDirection()
+    // TODO: serialize fields
+    public Vector3 GetAimDirection()
     {
         Camera cam = Camera.main;
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));

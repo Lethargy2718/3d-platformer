@@ -7,16 +7,4 @@ public class HealingItem : ConsumableItem, IStackable
 
     [SerializeField] private int stackSize;
     public int MaxStackSize => stackSize;
-
-    public override bool Use(PlayerController player)
-    {
-        if (player.TryGetComponent<HealthComponent>(out var comp))
-        {
-            if (comp.Heal(health) > 0)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 }
