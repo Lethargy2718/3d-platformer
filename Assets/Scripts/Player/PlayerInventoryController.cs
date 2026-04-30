@@ -10,12 +10,15 @@ public class PlayerInventoryController : MonoBehaviour
     public Inventory Inventory { get; private set; }
 
     private int currentSlotIdx;
-    private Item CurrentItem => Inventory[currentSlotIdx]?.item;
-    private ItemBehavior CurrentBehavior  => Inventory[currentSlotIdx]?.behavior;
 
+    private Item equippedItem;
+    private ItemBehavior equippedBehavior;
+
+    [HideInInspector] public GameObject currentViewObject;
+    [HideInInspector] public GameObject currentWorldObject;
+     
     private PlayerController player;
-    public GameObject currentViewObject;
-    public GameObject currentWorldObject;
+    private PlayerInputHandler inputHandler;
 
     private void Awake()
     {
@@ -25,11 +28,18 @@ public class PlayerInventoryController : MonoBehaviour
     public void Init(PlayerController player, PlayerInputHandler inputHandler)
     {
         this.player = player;
+        this.inputHandler = inputHandler;
         toolbarUI.Init(Inventory);
 
-        inputHandler.Scrolled += HandleScroll;
-        inputHandler.UsePressed += () => CurrentBehavior?.UseStart();
-        inputHandler.UseCanceled += () => CurrentBehavior?.UseEnd();
+        this.inputHandler.Scrolled += HandleScroll;
+        this.inputHandler.UsePressed += () =>
+        {
+            if (equippedBehavior != null) equippedBehavior.UseStart();
+        };
+        this.inputHandler.UseCanceled += () =>
+        {
+            if (equippedBehavior != null) equippedBehavior.UseEnd();
+        };
         Inventory.SlotChanged += OnInventorySlotChanged;
 
         currentSlotIdx = 0;
@@ -38,15 +48,18 @@ public class PlayerInventoryController : MonoBehaviour
 
     private void OnInventorySlotChanged(int idx, SlotChangeType type)
     {
-        if (type == SlotChangeType.Item)
+        if (type != SlotChangeType.Item) return;
+
+        var slot = Inventory[idx];
+
+        if (idx == currentSlotIdx)
         {
-            if (idx == currentSlotIdx) 
-                RefreshCurrentSlot();
-            else
-            {
-                var slot = Inventory[idx];
-                if (slot != null && slot.behavior != null) slot.behavior.Init(player, slot.item);
-            }
+            UnequipCurrent();
+            EquipFromSlot(currentSlotIdx);
+        }
+        else
+        {
+            if (slot?.behavior != null) slot.behavior.Init(player, slot.item);
         }
     }
 
@@ -55,40 +68,63 @@ public class PlayerInventoryController : MonoBehaviour
         int count = Inventory.Slots.Count;
         int newIndex = (currentSlotIdx + delta + count) % count;
         if (newIndex == currentSlotIdx) return;
+
         SwitchSlot(newIndex);
         toolbarUI.SetHighlight(newIndex);
     }
 
-    private void HoldVisuals(ref GameObject currentObject, GameObject prefab, Transform holder)
+    private void SwitchSlot(int newSlotIdx)
     {
-        Destroy(currentObject);
-        currentObject = prefab != null ? Instantiate(prefab, holder) : null;
-    }
-
-    private void UpdateHoldVisuals(Item item)
-    {
-        HoldVisuals(ref currentViewObject, item != null ? item.viewPrefab : null, viewItemHolder);
-        HoldVisuals(ref currentWorldObject, item != null ? item.worldPrefab : null, worldItemHolder);
-    }
-
-    private void SwitchSlot(int idx)
-    {
-        CurrentBehavior?.OnUnequip();
-        UnsubscribeFromCurrentItem();
-        currentSlotIdx = idx;
-        SubscribeToCurrentItem();
-        CurrentBehavior?.OnEquip();
-        UpdateHoldVisuals(CurrentItem);
+        UnequipCurrent();
+        currentSlotIdx = newSlotIdx;
+        EquipFromSlot(currentSlotIdx);
     }
 
     private void RefreshCurrentSlot()
     {
-        CurrentBehavior?.OnUnequip();
-        UnsubscribeFromCurrentItem();
-        CurrentBehavior?.Init(player, CurrentItem);
-        SubscribeToCurrentItem();
-        CurrentBehavior?.OnEquip();
-        UpdateHoldVisuals(CurrentItem);
+        UnequipCurrent();
+        EquipFromSlot(currentSlotIdx);
+    }
+
+    private void EquipFromSlot(int slotIdx)
+    {
+        var slot = Inventory[slotIdx];
+        equippedItem = slot?.item;
+        equippedBehavior = slot?.behavior;
+        UpdateHoldVisuals(equippedItem);
+
+        if (equippedBehavior != null)
+        {
+            equippedBehavior.Init(player, equippedItem);
+            equippedBehavior.ItemUsedUp += OnItemUsedUp;
+            equippedBehavior.OnEquip();
+        }
+
+    }
+
+    private void UnequipCurrent()
+    {
+        if (equippedBehavior != null)
+        {
+            equippedBehavior.OnUnequip();
+            equippedBehavior.ItemUsedUp -= OnItemUsedUp;
+            equippedBehavior = null;
+        }
+
+        equippedItem = null;
+
+        if (currentViewObject != null) Destroy(currentViewObject);
+        if (currentWorldObject != null) Destroy(currentWorldObject);
+        currentViewObject = null;
+        currentWorldObject = null;
+    }
+
+    private void UpdateHoldVisuals(Item item)
+    {
+        if (item == null) return;
+
+        currentViewObject = item.viewPrefab != null ? Instantiate(item.viewPrefab, viewItemHolder) : null;
+        currentWorldObject = item.worldPrefab != null ? Instantiate(item.worldPrefab, worldItemHolder) : null;
     }
 
     private void OnItemUsedUp()
@@ -96,25 +132,13 @@ public class PlayerInventoryController : MonoBehaviour
         Inventory.RemoveItem(currentSlotIdx, 1);
     }
 
-    private void SubscribeToCurrentItem()
-    {
-        if (CurrentBehavior != null)
-            CurrentBehavior.ItemUsedUp += OnItemUsedUp;
-    }
-
-    private void UnsubscribeFromCurrentItem()
-    {
-        if (CurrentBehavior != null)
-            CurrentBehavior.ItemUsedUp -= OnItemUsedUp;
-    }
-
     private void Update()
     {
-        if (CurrentBehavior != null) CurrentBehavior.Tick(Time.deltaTime);
+        if (equippedBehavior != null) equippedBehavior.Tick(Time.deltaTime);
     }
 
     private void FixedUpdate()
     {
-        if (CurrentBehavior != null) CurrentBehavior.FixedTick(Time.deltaTime);
+        if (equippedBehavior != null) equippedBehavior.FixedTick(Time.fixedDeltaTime);
     }
 }

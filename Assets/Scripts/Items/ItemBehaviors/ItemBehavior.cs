@@ -19,7 +19,10 @@ public abstract class ItemBehavior : MonoBehaviour
     protected virtual void OnUseEnd() { }
     protected virtual void OnTick(float dt) { }
     protected virtual void OnFixedTick(float dt) { }
-    public virtual void OnUnequip() { }
+    public virtual void OnUnequip()
+    {
+        useHeld = false;
+    }
 
     public void UseStart()
     {

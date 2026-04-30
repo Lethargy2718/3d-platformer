@@ -13,7 +13,13 @@ public class GunBehavior : ItemBehavior<GunItem>
 
     public int CurrentAmmo { get; private set; }
     private float timeTillNextShot = 0f;
-    private bool reloading = false;
+    private bool isReloading = false;
+
+    private GunVisuals gunVisualsView;
+    private GunVisuals gunVisualsWorld;
+
+    private ParticleSystem muzzleParticlesView;
+    private ParticleSystem muzzleParticlesWorld;
 
     public override void Init(PlayerController player, Item item)
     {
@@ -24,12 +30,31 @@ public class GunBehavior : ItemBehavior<GunItem>
     public override void OnEquip()
     {
         GunEquipped?.Invoke(this);
+
+        // NOTE: assumes currentViewObject and currentWorldObject were set before calling Init
+        if (!Player.InventoryController.currentViewObject.TryGetComponent(out gunVisualsView))
+        {
+            Debug.LogError("No GunVisuals on object gunVisualView");
+            Debug.Log(Player.InventoryController.currentViewObject);
+        }
+        else muzzleParticlesView = gunVisualsView.MuzzleParticles;
+
+        if (!Player.InventoryController.currentWorldObject.TryGetComponent(out gunVisualsWorld))
+        {
+            Debug.LogError("No GunVisuals on object gunWorldView");
+            Debug.Log(Player.InventoryController.currentWorldObject);
+        }
+        else muzzleParticlesWorld = gunVisualsWorld.MuzzleParticles;
+
         //if (CurrentAmmo <= 0) StartCoroutine(ReloadCoroutine());
     }
 
     public override void OnUnequip()
     {
+        base.OnUnequip();
         GunUnEquipped?.Invoke(this);
+        muzzleParticlesView.Stop();
+        muzzleParticlesWorld.Stop();
         StopAllCoroutines();
     }
 
@@ -46,7 +71,7 @@ public class GunBehavior : ItemBehavior<GunItem>
     {
         timeTillNextShot -= dt;
         // TODO: connect to an event somehow
-        if (Keyboard.current.rKey.isPressed && CurrentAmmo != Item.maxAmmo)
+        if (Keyboard.current.rKey.isPressed && CurrentAmmo != Item.maxAmmo && !isReloading)
         {
             StartCoroutine(ReloadCoroutine());
         }
@@ -56,13 +81,13 @@ public class GunBehavior : ItemBehavior<GunItem>
     {
         if (CurrentAmmo <= 0)
         {
-            if (!reloading)
+            if (!isReloading)
             {
                 StartCoroutine(ReloadCoroutine());
             }
             return;
         }
-        if (reloading)
+        if (isReloading)
         {
             EndReload();
             StopAllCoroutines();
@@ -79,14 +104,10 @@ public class GunBehavior : ItemBehavior<GunItem>
             {
                 hittable.GetHit(Item.bulletDamage, (hit.collider.transform.position - hit.point).normalized);
             }
-            Debug.Log(hit.collider.gameObject.name);
         }
 
-        var muzzleTransform = Player.InventoryController.currentViewObject.TryGetComponent<TransformExposer>(out var exposer) ? exposer.T : aimOrigin;
-
-        // TODO: play and stop particles instead of spawning/destroying
-        var ps = Instantiate(Item.muzzleParticles, Player.InventoryController.currentViewObject.transform);
-        ps.transform.SetPositionAndRotation(muzzleTransform.position, muzzleTransform.rotation);
+        muzzleParticlesView.Play();
+        muzzleParticlesWorld.Play();
 
         // NOTE: if i ever add a beam or whatever later, i can spawn from muzzleTransform.position toward hit.point while keeping the actual origin = player's aim origin
 
@@ -107,13 +128,13 @@ public class GunBehavior : ItemBehavior<GunItem>
 
     private void StartReload()
     {
-        reloading = true;
+        isReloading = true;
         GunStartedReloading?.Invoke();
     }
 
     private void EndReload()
     {
-        reloading = false;
+        isReloading = false;
         GunFinishedReloading?.Invoke();
     }
 
