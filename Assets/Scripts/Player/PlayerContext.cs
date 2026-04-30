@@ -48,6 +48,9 @@ public class PlayerContext
     [HideInInspector] public float yaw;
     [HideInInspector] public Vector3 aimDirection;
 
+    // Aim
+    [HideInInspector] public bool isAiming = false;
+
     [Header("Horizontal Movement")]
     public float maxWalkSpeed = 6f;
     public float sprintMultiplier = 1.6f;
@@ -84,6 +87,10 @@ public class PlayerContext
     public float dashCooldown = 1f;
     public float dashBuffer = 0.15f;
     public float maxWallNormalY = 0.9f;
+
+    [Header("ADS")]
+    public float adsFOV = 40f;  
+    public float adsSmoothing = 15f;
 
     public bool CanUseBufferedJump => hasBufferedJump && time < timeJumpWasPressed + jumpBuffer;
 

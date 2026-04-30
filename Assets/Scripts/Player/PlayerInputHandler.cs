@@ -97,5 +97,9 @@ public class PlayerInputHandler : MonoBehaviour
         {
             DropAllPressed?.Invoke();
         };
+
+        // Aim
+        p.Aim.performed += _ => ctx.isAiming = true;
+        p.Aim.canceled += _ => ctx.isAiming = false;
     }
 }
