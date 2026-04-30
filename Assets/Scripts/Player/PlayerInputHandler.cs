@@ -10,6 +10,8 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action SprintReleased;
     public event Action UsePressed;
     public event Action UseCanceled;
+    public event Action DropPressed;
+    public event Action DropAllPressed;
     public event Action<int> Scrolled; // +1 scroll up, -1 scroll down
 
     private PlayerControls controls;
@@ -33,12 +35,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void SubscribeToInputActions()
     {
+        var p = controls.Player;
+
         // Move
-        controls.Player.Move.performed += c => ctx.moveInput = c.ReadValue<Vector2>();
-        controls.Player.Move.canceled += _ => ctx.moveInput = Vector2.zero;
+        p.Move.performed += c => ctx.moveInput = c.ReadValue<Vector2>();
+        p.Move.canceled += _ => ctx.moveInput = Vector2.zero;
 
         // Jump
-        controls.Player.Jump.performed += _ =>
+        p.Jump.performed += _ =>
         {
             ctx.jumpPressed = true;
             ctx.jumpHeld = true;
@@ -46,7 +50,7 @@ public class PlayerInputHandler : MonoBehaviour
             ctx.hasBufferedJump = true;
             JumpPressed?.Invoke();
         };
-        controls.Player.Jump.canceled += _ =>
+        p.Jump.canceled += _ =>
         {
             ctx.jumpHeld = false;
             ctx.jumpPressed = false;
@@ -54,7 +58,7 @@ public class PlayerInputHandler : MonoBehaviour
         };
 
         // Dash 
-        controls.Player.Dash.performed += _ =>
+        p.Dash.performed += _ =>
         {
             ctx.dashPressed = true;
             ctx.timeDashWasPressed = ctx.time;
@@ -67,19 +71,31 @@ public class PlayerInputHandler : MonoBehaviour
         };
 
         // Sprint 
-        controls.Player.Sprint.performed += _ => { ctx.sprintHeld = true; SprintPressed?.Invoke(); };
-        controls.Player.Sprint.canceled += _ => { ctx.sprintHeld = false; SprintReleased?.Invoke(); };
+        p.Sprint.performed += _ => { ctx.sprintHeld = true; SprintPressed?.Invoke(); };
+        p.Sprint.canceled += _ => { ctx.sprintHeld = false; SprintReleased?.Invoke(); };
 
         // Use 
-        controls.Player.Use.performed += _ => UsePressed?.Invoke();
-        controls.Player.Use.canceled += _ => UseCanceled?.Invoke();
+        p.Use.performed += _ => UsePressed?.Invoke();
+        p.Use.canceled += _ => UseCanceled?.Invoke();
 
         // Scroll 
-        controls.Player.Scroll.performed += c =>
+        p.Scroll.performed += c =>
         {
             float delta = c.ReadValue<Vector2>().y;
             if (delta != 0f)
                 Scrolled?.Invoke(delta > 0f ? -1 : 1);
+        };
+
+        // Drop
+        p.Drop.performed += _ =>
+        {
+            DropPressed?.Invoke();
+        };
+
+        // Drop all
+        p.DropAll.performed += _ =>
+        {
+            DropAllPressed?.Invoke();
         };
     }
 }

@@ -7433,7 +7433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0/0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12011,17 +12011,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 902550993}
     m_Modifications:
+    - target: {fileID: 1783517190170295841, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.97
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.81
+      value: -0.625
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.02
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -16982,15 +16986,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2112877279335242377, guid: 9e27d5488f57266429a8f49967b0ea73, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 35.92713
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: 9e27d5488f57266429a8f49967b0ea73, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.93835294
+      value: -0.625
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: 9e27d5488f57266429a8f49967b0ea73, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.775762
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2112877279335242377, guid: 9e27d5488f57266429a8f49967b0ea73, type: 3}
       propertyPath: m_LocalRotation.w
@@ -22134,6 +22138,13 @@ MonoBehaviour:
   worldItemHolder: {fileID: 1777067606}
   toolbarUI: {fileID: 1258164137}
   inventorySize: 10
+  dropForwardDistance: 1.5
+  dropUpOffset: 0.5
+  singleDropRandomRadius: 0.3
+  multiDropRadius: 0.5
+  multiDropAngleJitter: 15
+  multiDropVerticalJitter: 0.2
+  cooldownAfterDrop: 3
   currentViewObject: {fileID: 0}
   currentWorldObject: {fileID: 0}
 --- !u!114 &2044104402

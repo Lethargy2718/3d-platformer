@@ -24,6 +24,6 @@ MonoBehaviour:
   impactParticles: {fileID: 4974460791158339750, guid: 4765de8c9205f37499f3e1fa99e0f63f, type: 3}
   fireRate: 10
   bulletDamage: 15
-  maxDistance: 100
+  maxDistance: 200
   maxAmmo: 30
   reloadDuration: 1

@@ -7,6 +7,15 @@ public class PlayerInventoryController : MonoBehaviour
     [SerializeField] private ToolbarUI toolbarUI;
     [SerializeField] private int inventorySize = 8;
 
+    [Header("Drop Settings")]
+    [SerializeField] private float dropForwardDistance = 1.5f;
+    [SerializeField] private float dropUpOffset = 0.5f;
+    [SerializeField] private float singleDropRandomRadius = 0.3f;
+    [SerializeField] private float multiDropRadius = 0.5f;
+    [SerializeField] private float multiDropAngleJitter = 15f;
+    [SerializeField] private float multiDropVerticalJitter = 0.2f;
+    [SerializeField] private float cooldownAfterDrop = 2f;
+
     public Inventory Inventory { get; private set; }
 
     private int currentSlotIdx;
@@ -18,7 +27,6 @@ public class PlayerInventoryController : MonoBehaviour
     [HideInInspector] public GameObject currentWorldObject;
      
     private PlayerController player;
-    private PlayerInputHandler inputHandler;
 
     private void Awake()
     {
@@ -28,18 +36,23 @@ public class PlayerInventoryController : MonoBehaviour
     public void Init(PlayerController player, PlayerInputHandler inputHandler)
     {
         this.player = player;
-        this.inputHandler = inputHandler;
         toolbarUI.Init(Inventory);
 
-        this.inputHandler.Scrolled += HandleScroll;
-        this.inputHandler.UsePressed += () =>
+        inputHandler.Scrolled += HandleScroll;
+
+        inputHandler.UsePressed += () =>
         {
             if (equippedBehavior != null) equippedBehavior.UseStart();
         };
-        this.inputHandler.UseCanceled += () =>
+        inputHandler.UseCanceled += () =>
         {
             if (equippedBehavior != null) equippedBehavior.UseEnd();
         };
+
+        inputHandler.DropPressed += DropCurrentItem;
+
+        inputHandler.DropAllPressed += DropAllCurrentItem;
+        
         Inventory.SlotChanged += OnInventorySlotChanged;
 
         currentSlotIdx = 0;
@@ -130,6 +143,42 @@ public class PlayerInventoryController : MonoBehaviour
     private void OnItemUsedUp()
     {
         Inventory.RemoveItem(currentSlotIdx, 1);
+    }
+
+    private void DropItems(int count)
+    {
+        if (equippedItem == null || count <= 0) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 pos = GetDropPosition(i, count);
+            var drop = Instantiate(equippedItem.pickupPrefab, pos, Quaternion.identity);
+            var trigger = drop.GetComponentInChildren<PickupTrigger>();
+            if (trigger != null) trigger.StartCooldown(cooldownAfterDrop);
+        }
+
+        Inventory.RemoveItem(currentSlotIdx, count);
+    }
+    private void DropCurrentItem() => DropItems(1);
+    private void DropAllCurrentItem() => DropItems(Inventory[currentSlotIdx]?.count ?? 0);
+
+    private Vector3 GetDropPosition(int itemIndex, int totalItems)
+    {
+        Vector3 basePos = player.transform.position + player.transform.forward * dropForwardDistance + Vector3.up * dropUpOffset;
+
+        if (totalItems == 1)
+        {
+            return basePos + Random.insideUnitSphere * singleDropRandomRadius;
+        }
+
+        float angleStep = 360f / totalItems;
+        float angle = angleStep * itemIndex + Random.Range(-multiDropAngleJitter, multiDropAngleJitter);
+
+        Vector3 offset = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad)) * multiDropRadius;
+
+        offset.y = Random.Range(-multiDropVerticalJitter, multiDropVerticalJitter);
+
+        return basePos + offset;
     }
 
     private void Update()
