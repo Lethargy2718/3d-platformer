@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5f2059919c8960459bc2b8785839947, type: 3}
-  m_Name: Gun
+  m_Name: Gun 1
   m_EditorClassIdentifier: Assembly-CSharp::GunItem
-  itemName: Gun
-  itemIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  itemDescription: Shoots
+  itemName: Assault Rifle
+  itemIcon: {fileID: 21300000, guid: 9fbdf4963f7002b4193158c959a3231c, type: 3}
+  itemDescription: Shoots rapidly
   cooldown: 0
   viewPrefab: {fileID: 158589263969855294, guid: 1fc886ea4493a464284f95534ede8623, type: 3}
   worldPrefab: {fileID: 2517040502037706934, guid: 2b3195e91b9cfd14da80c4177c47fce1, type: 3}
