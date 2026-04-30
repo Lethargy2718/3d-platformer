@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
     private StateMachine machine;
     private string lastStatePath;
+    private Camera cam;
 
     private void Awake()
     {
@@ -65,6 +66,8 @@ public class PlayerController : MonoBehaviour
         var root = new PlayerRoot(null, Context);
         var builder = new StateMachineBuilder(root);
         machine = builder.Build();
+
+        cam = Camera.main;
     }
 
     private void Start()
@@ -124,23 +127,18 @@ public class PlayerController : MonoBehaviour
     // TODO: serialize fields
     public Vector3 GetAimDirection(Vector3 aimOrigin)
     {
-        Camera cam = Camera.main;
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Vector3 targetPoint = ray.GetPoint(100f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, ~0, QueryTriggerInteraction.Ignore))
         {
-            Vector3 toHit = hit.point - aimOrigin;
-
-            // Corrects reversed shots
-            if (Vector3.Dot(toHit, cam.transform.forward) < 0.1f)
+            if (Vector3.Dot((hit.point - aimOrigin), cam.transform.forward) >= 0.1f)
             {
-                Vector3 fallback = ray.GetPoint(25f);
-                return (fallback - aimOrigin).normalized;
+                targetPoint = hit.point;
             }
-
-            return toHit.normalized;
         }
 
-        return (ray.GetPoint(25f) - aimOrigin).normalized;
+        Debug.DrawLine(aimOrigin, targetPoint, Color.green, 0.5f);
+        return (targetPoint - aimOrigin).normalized;
     }
 }

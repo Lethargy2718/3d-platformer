@@ -1,15 +1,19 @@
 using System.Collections;
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem;
 
 public class GunBehavior : ItemBehavior<GunItem>
 {
     // TODO: subscribe in UI to display/hide ammo
     public static event Action<GunBehavior> GunEquipped;
     public static event Action<GunBehavior> GunUnEquipped;
+    public static event Action GunStartedReloading;
+    public static event Action GunFinishedReloading;
 
     public int CurrentAmmo { get; private set; }
     private float timeTillNextShot = 0f;
+    private bool reloading = false;
 
     public override void Init(PlayerController player, Item item)
     {
@@ -20,7 +24,7 @@ public class GunBehavior : ItemBehavior<GunItem>
     public override void OnEquip()
     {
         GunEquipped?.Invoke(this);
-        if (CurrentAmmo <= 0) StartCoroutine(ReloadCoroutine());
+        //if (CurrentAmmo <= 0) StartCoroutine(ReloadCoroutine());
     }
 
     public override void OnUnequip()
@@ -41,41 +45,43 @@ public class GunBehavior : ItemBehavior<GunItem>
     protected override void OnTick(float dt)
     {
         timeTillNextShot -= dt;
+        // TODO: connect to an event somehow
+        if (Keyboard.current.rKey.isPressed && CurrentAmmo != Item.maxAmmo)
+        {
+            StartCoroutine(ReloadCoroutine());
+        }
     }
 
-    // TODO: play and stop particles instead of spawning/destroying
     private void Shoot()
     {
         if (CurrentAmmo <= 0) return;
-
-        Transform muzzleTransform;
-
-        // TODO: come up with a better system than this
-        if (Player.InventoryController.currentViewObject.TryGetComponent<TransformExposer>(out var exposer))
+        if (reloading)
         {
-            muzzleTransform = exposer.T;
-        }
-        else
-        {
-            muzzleTransform = Player.AimOrigin;
+            EndReload();
+            StopAllCoroutines();
         }
 
-        var muzzlePos = muzzleTransform.position;
+        var aimOrigin = Player.AimOrigin;
+        var aimDirection = Player.GetAimDirection(aimOrigin.position);
 
-        var aimDirection = Player.GetAimDirection(muzzlePos);
-
-        if (Physics.Raycast(muzzlePos, aimDirection, out var hit, Item.maxDistance, ~0, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(aimOrigin.position, aimDirection, out var hit, Item.maxDistance, ~0, QueryTriggerInteraction.Ignore))
         {
+            // TODO: play and stop particles instead of spawning/destroying
             Instantiate(Item.impactParticles, hit.point, Quaternion.LookRotation(hit.normal));
             if (hit.collider.TryGetComponent<IHittable>(out var hittable))
             {
-                hittable.GetHit(Item.bulletDamage);
+                hittable.GetHit(Item.bulletDamage, (hit.collider.transform.position - hit.point).normalized);
             }
+            Debug.Log(hit.collider.gameObject.name);
         }
 
-        // TODO: check if there is a one liner
+        var muzzleTransform = Player.InventoryController.currentViewObject.TryGetComponent<TransformExposer>(out var exposer) ? exposer.T : aimOrigin;
+
+        // TODO: play and stop particles instead of spawning/destroying
         var ps = Instantiate(Item.muzzleParticles, Player.InventoryController.currentViewObject.transform);
-        ps.transform.SetPositionAndRotation(muzzlePos, muzzleTransform.rotation);
+        ps.transform.SetPositionAndRotation(muzzleTransform.position, muzzleTransform.rotation);
+
+        // NOTE: if i ever add a beam or whatever later, i can spawn from muzzleTransform.position toward hit.point while keeping the actual origin = player's aim origin
 
         if (--CurrentAmmo <= 0)
         {
@@ -85,12 +91,27 @@ public class GunBehavior : ItemBehavior<GunItem>
 
     private IEnumerator ReloadCoroutine()
     {
+
+        StartReload();
         yield return new WaitForSeconds(Item.reloadDuration);
+        EndReload();
         CurrentAmmo = Item.maxAmmo;
+    }
+
+    private void StartReload()
+    {
+        reloading = true;
+        GunStartedReloading?.Invoke();
+    }
+
+    private void EndReload()
+    {
+        reloading = false;
+        GunFinishedReloading?.Invoke();
     }
 
     private void OnDestroy()
     {
-        
+
     }
 }

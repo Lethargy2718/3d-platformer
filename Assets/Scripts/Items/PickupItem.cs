@@ -1,8 +1,14 @@
 using UnityEngine;
 
-public class PickupItem : MonoBehaviour
+public class PickupItem : MonoBehaviour, IHittable
 {
     public Item item;
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public void GiveItemToPlayer(PlayerController player)
     {
@@ -11,5 +17,10 @@ public class PickupItem : MonoBehaviour
         {
             Destroy(gameObject);
         } 
+    }
+
+    public void GetHit(float dmg, Vector3 hitDiretion)
+    {
+        rb.AddForce(hitDiretion * dmg, ForceMode.Impulse);
     }
 }

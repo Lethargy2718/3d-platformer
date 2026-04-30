@@ -21,7 +21,7 @@ MonoBehaviour:
   pickupPrefab: {fileID: 4806909215499349103, guid: f378307728b6fb04f9f066d04adc379a, type: 3}
   itemBehavior: {fileID: 8715436318192736928, guid: db2615ad43db99f4c976bdd26b353907, type: 3}
   muzzleParticles: {fileID: 4974460791158339750, guid: c3b823b830e05b24b91806bf58c32313, type: 3}
-  impactParticles: {fileID: 4974460791158339750, guid: c154c88945813b04597016e449ce96da, type: 3}
+  impactParticles: {fileID: 4974460791158339750, guid: 4765de8c9205f37499f3e1fa99e0f63f, type: 3}
   fireRate: 5
   bulletDamage: 15
   maxDistance: 100

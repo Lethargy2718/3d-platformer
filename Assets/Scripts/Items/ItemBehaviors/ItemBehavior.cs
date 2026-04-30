@@ -50,7 +50,7 @@ public abstract class ItemBehavior : MonoBehaviour
 
 public abstract class ItemBehavior<T> : ItemBehavior where T : Item
 {
-    protected T Item { get; set; }
+    public T Item { get; set; }
 
     public override void Init(PlayerController player, Item item)
     {
