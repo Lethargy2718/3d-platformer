@@ -12,6 +12,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action UseCanceled;
     public event Action DropPressed;
     public event Action DropAllPressed;
+    public event Action ReloadPressed;
     public event Action<int> Scrolled; // +1 scroll up, -1 scroll down
 
     private PlayerControls controls;
@@ -101,5 +102,8 @@ public class PlayerInputHandler : MonoBehaviour
         // Aim
         p.Aim.performed += _ => ctx.isAiming = true;
         p.Aim.canceled += _ => ctx.isAiming = false;
+
+        // Reload
+        p.Reload.performed += _ => ReloadPressed?.Invoke();
     }
 }

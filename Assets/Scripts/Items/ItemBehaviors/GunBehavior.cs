@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using System;
-using UnityEngine.InputSystem;
 
 public class GunBehavior : ItemBehavior<GunItem>
 {
@@ -49,7 +48,9 @@ public class GunBehavior : ItemBehavior<GunItem>
         }
         else muzzleParticlesWorld = gunVisualsWorld.MuzzleParticles;
 
-        //if (CurrentAmmo <= 0) StartCoroutine(ReloadCoroutine());
+        Player.InputHandler.ReloadPressed += Reload;
+
+        if (CurrentAmmo <= 0) Reload();
     }
 
     public override void OnUnequip()
@@ -59,6 +60,8 @@ public class GunBehavior : ItemBehavior<GunItem>
         muzzleParticlesView.Stop();
         muzzleParticlesWorld.Stop();
         StopAllCoroutines();
+        isReloading = false;
+        Player.InputHandler.ReloadPressed -= Reload;
     }
 
     protected override void OnUpdateHold(float _)
@@ -73,11 +76,6 @@ public class GunBehavior : ItemBehavior<GunItem>
     protected override void OnTick(float dt)
     {
         timeTillNextShot -= dt;
-        // TODO: connect to an event somehow
-        if (Keyboard.current.rKey.isPressed && CurrentAmmo != Item.maxAmmo && !isReloading)
-        {
-            StartCoroutine(ReloadCoroutine());
-        }
     }
 
     private void Shoot()
@@ -86,7 +84,7 @@ public class GunBehavior : ItemBehavior<GunItem>
         {
             if (!isReloading)
             {
-                StartCoroutine(ReloadCoroutine());
+                Reload();
             }
             return;
         }
@@ -101,7 +99,6 @@ public class GunBehavior : ItemBehavior<GunItem>
 
         if (Physics.Raycast(aimOrigin.position, aimDirection, out var hit, Item.maxDistance, ~0, QueryTriggerInteraction.Ignore))
         {
-            // TODO: play and stop particles instead of spawning/destroying
             Instantiate(Item.impactParticles, hit.point, Quaternion.LookRotation(hit.normal));
             if (hit.collider.TryGetComponent<IHittable>(out var hittable))
             {
@@ -116,7 +113,7 @@ public class GunBehavior : ItemBehavior<GunItem>
 
         if (--CurrentAmmo <= 0)
         {
-            StartCoroutine(ReloadCoroutine());
+            Reload();
         }
     }
 
@@ -141,8 +138,9 @@ public class GunBehavior : ItemBehavior<GunItem>
         GunFinishedReloading?.Invoke();
     }
 
-    private void OnDestroy()
+    private void Reload()
     {
-
+        if (isReloading || CurrentAmmo == Item.maxAmmo) return;
+        StartCoroutine(ReloadCoroutine());
     }
 }
