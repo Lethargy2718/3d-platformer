@@ -6,11 +6,11 @@ public class InventorySlot
     public int count;
     public ItemBehavior behavior;
 
-    public InventorySlot(Item item, int count)
+    public InventorySlot(Item item, int count, ItemBehavior existingBehavior = null)
     {
         this.item = item;
         this.count = count;
-        behavior = Object.Instantiate(item.itemBehavior);
+        this.behavior = existingBehavior == null ? Object.Instantiate(item.itemBehavior) : existingBehavior; 
     }
 
     public override string ToString()

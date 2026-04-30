@@ -25,7 +25,7 @@ public class PlayerInventoryController : MonoBehaviour
 
     [HideInInspector] public GameObject currentViewObject;
     [HideInInspector] public GameObject currentWorldObject;
-     
+
     private PlayerController player;
 
     private void Awake()
@@ -52,7 +52,7 @@ public class PlayerInventoryController : MonoBehaviour
         inputHandler.DropPressed += DropCurrentItem;
 
         inputHandler.DropAllPressed += DropAllCurrentItem;
-        
+
         Inventory.SlotChanged += OnInventorySlotChanged;
 
         currentSlotIdx = 0;
@@ -149,15 +149,29 @@ public class PlayerInventoryController : MonoBehaviour
     {
         if (equippedItem == null || count <= 0) return;
 
+        bool isStackable = equippedItem is IStackable;
+
         for (int i = 0; i < count; i++)
         {
             Vector3 pos = GetDropPosition(i, count);
             var drop = Instantiate(equippedItem.pickupPrefab, pos, Quaternion.identity);
             var trigger = drop.GetComponentInChildren<PickupTrigger>();
             if (trigger != null) trigger.StartCooldown(cooldownAfterDrop);
-        }
 
-        Inventory.RemoveItem(currentSlotIdx, count);
+            if (isStackable)
+            {
+                Inventory.RemoveItem(currentSlotIdx, 1);
+                continue;
+            }
+
+            // Pass behavior to pickup if not stackable
+            var slot = Inventory.TakeSlot(currentSlotIdx);
+            var pickup = drop.GetComponentInChildren<PickupItem>();
+            if (pickup != null && slot != null)
+            {
+                pickup.savedBehavior = slot.behavior;
+            }
+        }
     }
     private void DropCurrentItem() => DropItems(1);
     private void DropAllCurrentItem() => DropItems(Inventory[currentSlotIdx]?.count ?? 0);

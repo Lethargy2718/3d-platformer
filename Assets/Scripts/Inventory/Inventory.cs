@@ -18,8 +18,20 @@ public class Inventory
         slots = new InventorySlot[size];
     }
 
+    // Returns slot and clears it in the inventory
+    public InventorySlot TakeSlot(int idx)
+    {
+        if (idx < 0 || idx >= size) return null;
+        ref var slot = ref slots[idx];
+        if (slot == null) return null;
+        var taken = slot;
+        slot = null;
+        SlotChanged?.Invoke(idx, SlotChangeType.Item);
+        return taken;
+    }
+
     // Returns the number of leftover items
-    public int AddItem(Item item, int count) 
+    public int AddItem(Item item, int count, ItemBehavior existingBehavior = null)
     {
         if (item is IStackable stackableItem)
         {
@@ -29,15 +41,13 @@ public class Inventory
         for (int i = 0; i < size && count > 0; i++)
         {
             ref var slot = ref slots[i];
-
             if (slot == null)
             {
-                slot = new InventorySlot(item, 1);
+                slot = new InventorySlot(item, 1, count == 1 ? existingBehavior : null);
                 count--;
                 SlotChanged?.Invoke(i, SlotChangeType.Item);
             }
         }
-
         return count;
     }
 

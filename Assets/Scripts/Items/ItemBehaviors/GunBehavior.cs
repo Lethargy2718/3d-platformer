@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class GunBehavior : ItemBehavior<GunItem>
 {
-    // TODO: subscribe in UI to display/hide ammo
     public static event Action<GunBehavior> GunEquipped;
     public static event Action<GunBehavior> GunUnEquipped;
     public static event Action GunStartedReloading;
@@ -24,7 +23,11 @@ public class GunBehavior : ItemBehavior<GunItem>
     public override void Init(PlayerController player, Item item)
     {
         base.Init(player, item);
-        CurrentAmmo = Item.maxAmmo;
+        if (!isInitialized)
+        {
+            CurrentAmmo = Item.maxAmmo;
+            isInitialized = true;
+        }
     }
 
     public override void OnEquip()

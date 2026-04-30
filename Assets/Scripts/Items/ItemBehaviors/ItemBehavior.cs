@@ -6,6 +6,7 @@ public abstract class ItemBehavior : MonoBehaviour
     public event Action ItemUsedUp;
 
     protected PlayerController Player { get; set; }
+    protected bool isInitialized = false;
 
     private bool useHeld = false;
 
