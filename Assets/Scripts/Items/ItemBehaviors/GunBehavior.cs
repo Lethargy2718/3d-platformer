@@ -54,7 +54,14 @@ public class GunBehavior : ItemBehavior<GunItem>
 
     private void Shoot()
     {
-        if (CurrentAmmo <= 0) return;
+        if (CurrentAmmo <= 0)
+        {
+            if (!reloading)
+            {
+                StartCoroutine(ReloadCoroutine());
+            }
+            return;
+        }
         if (reloading)
         {
             EndReload();

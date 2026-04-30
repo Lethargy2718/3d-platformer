@@ -74,7 +74,9 @@ public class PlayerInventoryController : MonoBehaviour
     private void SwitchSlot(int idx)
     {
         CurrentBehavior?.OnUnequip();
+        UnsubscribeFromCurrentItem();
         currentSlotIdx = idx;
+        SubscribeToCurrentItem();
         CurrentBehavior?.OnEquip();
         UpdateHoldVisuals(CurrentItem);
     }
@@ -82,9 +84,28 @@ public class PlayerInventoryController : MonoBehaviour
     private void RefreshCurrentSlot()
     {
         CurrentBehavior?.OnUnequip();
+        UnsubscribeFromCurrentItem();
         CurrentBehavior?.Init(player, CurrentItem);
+        SubscribeToCurrentItem();
         CurrentBehavior?.OnEquip();
         UpdateHoldVisuals(CurrentItem);
+    }
+
+    private void OnItemUsedUp()
+    {
+        Inventory.RemoveItem(currentSlotIdx, 1);
+    }
+
+    private void SubscribeToCurrentItem()
+    {
+        if (CurrentBehavior != null)
+            CurrentBehavior.ItemUsedUp += OnItemUsedUp;
+    }
+
+    private void UnsubscribeFromCurrentItem()
+    {
+        if (CurrentBehavior != null)
+            CurrentBehavior.ItemUsedUp -= OnItemUsedUp;
     }
 
     private void Update()
