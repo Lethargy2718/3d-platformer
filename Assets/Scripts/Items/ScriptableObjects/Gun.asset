@@ -22,8 +22,8 @@ MonoBehaviour:
   itemBehavior: {fileID: 8715436318192736928, guid: db2615ad43db99f4c976bdd26b353907, type: 3}
   muzzleParticles: {fileID: 4974460791158339750, guid: c3b823b830e05b24b91806bf58c32313, type: 3}
   impactParticles: {fileID: 4974460791158339750, guid: 4765de8c9205f37499f3e1fa99e0f63f, type: 3}
-  fireRate: 5
+  fireRate: 10
   bulletDamage: 15
   maxDistance: 100
-  maxAmmo: 5
+  maxAmmo: 30
   reloadDuration: 1
